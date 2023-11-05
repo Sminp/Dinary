@@ -28,6 +28,11 @@ export const register = async ({ account, password }) => {
       if (response.status === 200) {
         console.log('회원가입 성공');
       }
+
+      if (response.status === 404) {
+        console.log('회원가입 실패');
+        return '중복된 아이디입니다.';
+      }
     })
     .catch((error) => console.log(error.response));
 };
