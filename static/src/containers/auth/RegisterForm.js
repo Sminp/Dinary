@@ -35,13 +35,8 @@ export default function RegisterForm() {
     });
     if (response === false) {
       setError('e');
-      return;
-    }
-    try {
+    } else {
       setError('성공');
-    } catch (e) {
-      console.log(e);
-      setError('e');
     }
   };
 
@@ -59,7 +54,7 @@ export default function RegisterForm() {
       alert('회원가입 성공');
       navigate('/');
     }
-  }, [error, setError, form.account, resetState, navigate]);
+  }, [error, form.account, resetState, navigate]);
 
   return (
     <AuthForm
