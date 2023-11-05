@@ -31,7 +31,7 @@ export const register = async ({ account, password }) => {
 
       if (response.status === 404) {
         console.log('회원가입 실패');
-        return '중복된 아이디입니다.';
+        return false;
       }
     })
     .catch((error) => console.log(error.response));

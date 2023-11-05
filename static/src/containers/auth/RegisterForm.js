@@ -33,7 +33,10 @@ export default function RegisterForm() {
       account: form.account,
       password: form.password,
     });
-    console.log(response.data);
+    if (response === false) {
+      setError('e');
+      return;
+    }
     try {
       setError('성공');
     } catch (e) {
@@ -46,7 +49,7 @@ export default function RegisterForm() {
     if (error === 'e') {
       // // 계정명이 이미 존재할 때
       // if (error.response.status === 409) {
-      //   setError('이미 존재하는 계정명입니다.');
+      setError('이미 존재하는 계정명입니다.');
       // } else {
       // 기타 이유
       setError('회원가입 실패');
