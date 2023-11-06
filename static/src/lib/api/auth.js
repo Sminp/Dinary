@@ -13,6 +13,7 @@ export const login = async ({ account, password }) => {
 
       if (response.status === 200) {
         console.log('로그인 성공');
+        return true;
       }
     })
     .catch((error) => console.log(error.response));
@@ -27,6 +28,7 @@ export const register = async ({ account, password }) => {
 
       if (response.status === 200) {
         console.log('회원가입 성공');
+        return true;
       }
 
       if (response.status === 404) {

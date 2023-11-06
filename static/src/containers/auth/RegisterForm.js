@@ -34,27 +34,23 @@ export default function RegisterForm() {
       password: form.password,
     });
     if (response === false) {
-      setError('e');
-    } else {
+      setError('이미 존재하는 계정명입니다.');
+    } else if (response === true) {
       setError('성공');
     }
   };
 
   useEffect(() => {
     if (error === 'e') {
-      // // 계정명이 이미 존재할 때
-      // if (error.response.status === 409) {
-      setError('이미 존재하는 계정명입니다.');
-      // } else {
-      // 기타 이유
       setError('회원가입 실패');
     }
     if (error === '성공') {
       console.log('check API 성공');
       alert('회원가입 성공');
       navigate('/');
+      resetState();
     }
-  }, [error, form.account, resetState, navigate]);
+  }, [error]);
 
   return (
     <AuthForm
