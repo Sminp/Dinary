@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>paging</title>
+</head>
+<body>
+<button onclick="saveReq()">글작성</button>
+<table>
+  <tr>
+    <th>id</th>
+    <th>title</th>
+    <th>date</th>
+  </tr>
+  <tr th:each="diary: ${diaryList}">
+    <td th:text="${diary.id}"></td>
+    <td><a th:href="@{|/dinary/${diary.id}|(page=${diaryList.number + 1})}" th:text="${diary.diaryTitle}"></a></td>
+    <td th:text="*{#temporals.format(diary.diaryCreatedTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+  </tr>
+</table>
+<a th:href="@{/dinary/paging(page=1)}">First</a>
+<a th:if="${diaryList.first != null}" th:href="@{/dinary/paging(page=${diaryList.number})}" th:text="prev">prev</a>
+<a th:if="${diaryList.first == null}" href="#">prev</a>
+
+<span th:each="page: ${#numbers.sequence(startPage, endPage)}">
+    <span th:if="${page == diaryList.number + 1}" th:text="${page}"></span>
+    <span th:unless="${page == diaryList.number + 1}">
+        <a th:href="@{/dinary/paging(page=${page})}" th:text="${page}"></a>
+    </span>
+</span>
+<a th:href="${diaryList.last} ? '#' : @{/dinary/paging(page=${diaryList.number + 2})}">next</a>
+<a th:href="@{/dinary/paging(page=${diaryList.totalPages})}">Last</a>
+</body>
+<script>
+    const saveReq = () => {
+        location.href = "/dinary/save";
+    }
+</script>
+</html>

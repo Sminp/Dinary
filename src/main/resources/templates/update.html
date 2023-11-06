@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>update</title>
+</head>
+<body>
+<form action="/dinary/update" method="post" name="updateForm" enctype="multipart/form-data">
+  <input type="hidden" name="id" th:value="${diaryUpdate.id}">
+  제목 <input type="text" name="diaryTitle" th:value="${diaryUpdate.diaryTitle}"><br>
+  내용 <textarea name="diaryContents" cols="30" rows="10" th:text="${diaryUpdate.diaryContents}"></textarea>
+  파일 첨부 <input type="file" name="diaryFile" th:field="${diaryUpdate.diaryFile}" multiple><br>
+  <input type="button" value="완료" onclick="diaryUpdate()">
+</form>
+<script th:inline="javascript">
+  const diaryUpdate = () => {
+    document.updateForm.submit();
+  }
+</script>
+</body>
+</html>
