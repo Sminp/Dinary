@@ -5,10 +5,10 @@ import client from './client';
 // 로그인 확인 후에
 export const getUser = async (account) => {
   const user = await client.get(`/user/${account}`);
-  const userImage = await client.put(`/image/${account}`);
-  const userTheme = user.data.theme;
+  localStorage.setItem('theme', JSON.stringify(user.data.userTheme));
+  localStorage.setItem('user-image', JSON.stringify(user.data.userImage));
 
-  return { userTheme, userImage };
+  return { user };
 };
 
 // 프로필 사진 전송

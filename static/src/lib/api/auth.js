@@ -20,23 +20,25 @@ export const login = async ({ account, password }) => {
 };
 
 // 회원가입
-export const register = async ({ account, password }) => {
-  await client
+export const register = ({ account, password }) => {
+  client
     .post('/user/new', { account, password })
     .then((response) => {
       console.log('200', response.data);
 
       if (response.status === 200) {
         console.log('회원가입 성공');
-        return true;
+        return response.data;
       }
 
       if (response.status === 404) {
         console.log('회원가입 실패');
-        return false;
       }
     })
-    .catch((error) => console.log(error.response));
+    .catch((error) => {
+      console.log(error.response);
+      return false;
+    });
 };
 
 // 로그아웃
