@@ -96,15 +96,18 @@ public class UserService {
             LoginAfDto res = new LoginAfDto(userEntity);
             String userPath = res.getUserImage();
 
-            //파일 불러오기
-            File imageFile = new File(imgPath+userPath);
-            byte[] imageBytes = Files.readAllBytes(imageFile.toPath());
-            //Base64로 인코딩하기
-            String encodingImage = Base64.getEncoder().encodeToString(imageBytes);
+            if(userPath.isEmpty()){
+                //프로필 올린적이 없음
+            }else{
+                //파일 불러오기
+                File imageFile = new File(imgPath+userPath);
+                byte[] imageBytes = Files.readAllBytes(imageFile.toPath());
+                //Base64로 인코딩하기
+                String encodingImage = Base64.getEncoder().encodeToString(imageBytes);
 
-            //LoginAfDto의 String을 인코딩한 String으로 바꾸기
-            res.setUserImage(encodingImage);
-
+                //LoginAfDto의 String을 인코딩한 String으로 바꾸기
+                res.setUserImage(encodingImage);
+            }
             //보내주기
             return ResponseEntity.status(200).body(res);
         }catch(Exception error){
