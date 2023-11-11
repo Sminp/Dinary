@@ -7,7 +7,8 @@ import PostsAlign from '../../components/posts/PostsAlign';
 import MonthlyCalendar from '../../components/posts/MonthlyCalendar';
 import { postListState } from '../../State/postState';
 import { userAccount } from '../../State/userState';
-import { listPosts } from '../../lib/api/posts';
+// import { listPosts } from '../../lib/api/posts';
+import client from '../../lib/api/client';
 
 const PostListBlock = styled(Responsive)`
   width: 100%;
@@ -24,29 +25,38 @@ export default function PostListContainer() {
   const [error, setError] = useState('');
   // const [loading, setLoading] = useRecoilState(postState).loading;
 
+  const listPosts = ({ account }) => {
+    client
+      .get(`/diarys/${account}`)
+      .then((response) => {
+        console.log('200', response.data);
+
+        if (response.status === 200) {
+          console.log('글리스트 불러오기 성공');
+          setPostList({
+            ...postList,
+            totalPages: response.data.totalPages,
+            totalElements: response.data.totalElements,
+            currentPage: response.data.currentPage,
+            currentElements: response.data.currentElements,
+            postInfo: response.data,
+          });
+        }
+      })
+      .catch((error) => {
+        console.log(error.response);
+      });
+  };
+
   // 포스트 목록 불러오기
   useEffect(() => {
-    const getPosts = async () => {
-      try {
-        // 로딩 시작
-        // setLoading(true);
-        // 포스트 목록 불러오기
-        const response = await listPosts(account);
-        setPostList({
-          ...postList,
-          totalPages: response.data.totalPages,
-          totalElements: response.data.totalElements,
-          currentPage: response.data.currentPage,
-          currentElements: response.data.currentElements,
-          postInfo: response.data,
-        });
-      } catch (e) {
-        setError(e);
-      }
-      // setLoading(false);
-    };
-    getPosts();
-  }, [setPostList]);
+    listPosts(account);
+    try {
+    } catch (e) {
+      console.log(e);
+      setError('포스트 목록을 불러오는데 실패했습니다.');
+    }
+  }, []);
 
   // // 에러 발생 시
   // if (error) {
