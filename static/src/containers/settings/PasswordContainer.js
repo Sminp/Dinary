@@ -6,7 +6,8 @@ import PasswordChange from '../../components/settings/PasswordChange';
 import { userProfileState } from '../../State/userState';
 import { passwordState } from '../../State/authState';
 import { changePassword } from '../../lib/api/auth';
-import { postUserImage } from '../../lib/api/user';
+// import { postUserImage } from '../../lib/api/user';
+import client from '../../lib/api/client'; // 하드코딩
 
 const ContentBlock = styled.div`
   width: 746px;
@@ -33,6 +34,13 @@ export default function PasswordContainer() {
   const [form, setForm] = useRecoilState(passwordState);
   const [error, setError] = useState('');
   const [auth, setAuth] = useState('');
+
+  const postUserImage = async (account, storedFilePath) => {
+    const userImage = await client.post(`/image/${account}.json`, {
+      storedFilePath,
+    });
+    return userImage;
+  };
 
   const onChange = (e) => {
     const { value, name } = e.target;
@@ -87,12 +95,15 @@ export default function PasswordContainer() {
       });
     }
 
-    postUserImage(profile.account, imageUrl);
+    const reader = new FileReader();
+    reader.readAsDataURL(e.target.files[0]);
+    console.log(imageUrl);
+    localStorage.setItem('user-image', imageUrl);
+
+    // postUserImage(profile.account, imageUrl);
     try {
       // 여기에서 막힌다.
       // 원래는 selector에 적어야 하는데 오류 생겨서 여기에 저장 확인 후 수정
-      localStorage.setItem('user-image', imageUrl);
-      console.log(profile.userImage);
       // window.location.reload();
     } catch (e) {
       console.log('localStorage is not working');
