@@ -79,15 +79,13 @@ export default function PasswordContainer() {
   const onUpload = (e) => {
     const file = e.target.files[0];
     const imageUrl = URL.createObjectURL(file);
-    const correctForm = /(.*?)\.(jpg|gif|png|jpeg|bmp|tif|heic|)$/;
+    const correctForm = /(.*?)\.(jpg)$/; // |gif|png|jpeg|bmp|tif|heic| 삭제
     if (file.size > 1024 * 1024 * 10) {
       alert('10MB 이상의 이미지는 업로드 할 수 없습니다.');
       return;
     }
     if (!file.name.match(correctForm)) {
-      alert(
-        '이미지 파일만 업로드가 가능합니다. (*.jpg, *.gif, *.png, *.jpeg, *.bmp, *.tif, *.heic)',
-      );
+      alert('이미지 파일만 업로드가 가능합니다. (*.jpg)'); //, *.gif, *.png, *.jpeg, *.bmp, *.tif, *.heic 삭제
     } else {
       setProfile({
         ...profile,
