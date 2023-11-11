@@ -31,6 +31,7 @@ public class UserEntity {
         this.usrPw = dto.getPassword();
         this.usrJoindate = Timestamp.valueOf(LocalDateTime.now().plusHours(9));
         //지금 db 시간이 asiaseoul로 안바뀌어서 utc + 9적용
+        this.usrTheme = "basicTheme";
     }
 
     //로그인 할 때 가져올 정보 2개

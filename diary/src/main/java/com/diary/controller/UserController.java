@@ -1,7 +1,6 @@
 package com.diary.controller;
 
 import com.diary.dto.LoginDto;
-import com.diary.dto.ResponseDto;
 import com.diary.dto.SignUpDto;
 import com.diary.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +30,9 @@ public class UserController {
     }
 
     @GetMapping("/{account}")
-    public ResponseEntity<?> accountInfo(@RequestBody String requestBody){
-        System.out.println(requestBody);
-        ResponseEntity<?> result = userService.logInAf(requestBody);
+    public ResponseEntity<?> accountInfo(@PathVariable String account){
+        System.out.println(account);
+        ResponseEntity<?> result = userService.logInAf(account);
         return result;
     }
 }

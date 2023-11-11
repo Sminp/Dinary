@@ -10,13 +10,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.util.Base64;
 import java.util.Optional;
 //UserController 에 대한 기능 구현
 
 @Service
 public class UserService {
 
-    @Autowired UserRepository userRepository;
+    @Autowired
+    UserRepository userRepository;
     public ResponseEntity<?> signUp(SignUpDto dto) {
         //id 중복확인
         String inputid = dto.getAccount();
@@ -85,15 +89,31 @@ public class UserService {
     //로그인시 정보 가져오기
     public ResponseEntity<LoginAfDto> logInAf(String id)
     {
+        String imgPath = "src/main/resources/static/profile/";
+
         try{
             Optional<UserEntity> userEntity = userRepository.findById(id);
             LoginAfDto res = new LoginAfDto(userEntity);
+            String userPath = res.getUserImage();
 
+            //파일 불러오기
+            File imageFile = new File(imgPath+userPath);
+            byte[] imageBytes = Files.readAllBytes(imageFile.toPath());
+            //Base64로 인코딩하기
+            String encodingImage = Base64.getEncoder().encodeToString(imageBytes);
 
+            //LoginAfDto의 String을 인코딩한 String으로 바꾸기
+            res.setUserImage(encodingImage);
+
+            //보내주기
             return ResponseEntity.status(200).body(res);
         }catch(Exception error){
-            LoginAfDto resfail = new LoginAfDto();
-            return ResponseEntity.status(400).body(resfail);
+            LoginAfDto rest = new LoginAfDto();
+            return ResponseEntity.status(400).body(rest);
         }
+
+
+
+
     }
 }
