@@ -142,6 +142,7 @@ public class UserService {
         }catch(Exception error){
             return ResponseEntity.status(400).body("데이터베이스 오류");
         }
-
     }
+
+
 }

@@ -49,4 +49,12 @@ public class UserController {
         ResponseEntity<?> result = userService.changePw(account, newPw);
         return result;
     }
+
+    // /upload : 프로필 사진 변경
+    /*
+    @PostMapping("/upload")
+    public ResponseEntity<?>
+    {
+    }
+     */
 }
