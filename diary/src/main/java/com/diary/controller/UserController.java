@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     @Autowired UserService userService;
 
+    //회원가입
     @PostMapping("/new")
     public ResponseEntity<?> signup(@RequestBody SignUpDto requestBody){
         System.out.println(requestBody.toString());
@@ -21,7 +22,7 @@ public class UserController {
         return result;
     }
 
-
+    //로그인
     @PostMapping("/{account}")
     public ResponseEntity<?> login(@RequestBody LoginDto requestBody){
         System.out.println(requestBody.toString());
@@ -29,10 +30,23 @@ public class UserController {
         return result;
     }
 
+    //로그인시 계정 정보넘기기
     @GetMapping("/{account}")
     public ResponseEntity<?> accountInfo(@PathVariable String account){
         System.out.println(account);
         ResponseEntity<?> result = userService.logInAf(account);
+        return result;
+    }
+
+    //비밀번호 변경 (LoginDto가 account, password를 받는 객체라서 이거썼습니다.)
+    @PostMapping("/changePw")
+    public ResponseEntity<?> changePw(@RequestBody LoginDto dto)
+    {
+        String account = dto.getAccount();
+        String newPw = dto.getPassword();
+        //확인용 콘솔 출력
+        System.out.println(account+" "+newPw);
+        ResponseEntity<?> result = userService.changePw(account, newPw);
         return result;
     }
 }

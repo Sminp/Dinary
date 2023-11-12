@@ -102,6 +102,15 @@ public class UserService {
                 //파일 불러오기
                 File imageFile = new File(imgPath+userPath);
                 byte[] imageBytes = Files.readAllBytes(imageFile.toPath());
+                
+                //콘솔 확인용
+                System.out.print("이미지 스트링: ");
+                for (byte b:imageBytes) {
+                    System.out.print(b + " ");
+                }
+                System.out.println(" ");
+                
+                
                 //Base64로 인코딩하기
                 String encodingImage = Base64.getEncoder().encodeToString(imageBytes);
 
@@ -114,9 +123,25 @@ public class UserService {
             LoginAfDto rest = new LoginAfDto();
             return ResponseEntity.status(400).body(rest);
         }
+    }
 
-
-
+    //비밀번호 변경
+    public ResponseEntity<String> changePw(String account, String newPw){
+        Optional<UserEntity> userOptional = userRepository.findByUsrId(account);
+        try{
+            if(userOptional.isPresent()){
+                //사용자가 있다면 저장
+                UserEntity user = userOptional.get();
+                user.setUsrPw(newPw);
+                userRepository.save(user);
+                //리스폰스 리턴
+                return ResponseEntity.status(200).body("비밀번호 변경 성공!");
+            } else {
+                return ResponseEntity.status(404).body("없는 유저입니다");
+            }
+        }catch(Exception error){
+            return ResponseEntity.status(400).body("데이터베이스 오류");
+        }
 
     }
 }

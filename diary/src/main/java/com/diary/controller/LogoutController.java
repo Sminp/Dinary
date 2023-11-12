@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class LogoutController {
-    @PostMapping("/logoutg")
+    @PostMapping("/logout")
     public String logout(HttpServletRequest request){
         //request 객체를 통해 session을 추출
         HttpSession session = request.getSession();
