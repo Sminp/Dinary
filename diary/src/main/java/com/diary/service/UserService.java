@@ -10,9 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.nio.file.Files;
-import java.util.Base64;
 import java.util.Optional;
 //UserController 에 대한 기능 구현
 
@@ -21,6 +18,10 @@ public class UserService {
 
     @Autowired
     UserRepository userRepository;
+
+    public UserService() {
+    }
+
     public ResponseEntity<?> signUp(SignUpDto dto) {
         //id 중복확인
         String inputid = dto.getAccount();
@@ -86,11 +87,11 @@ public class UserService {
 
     }
 
+    @Autowired
+    ImageService imageService;
     //로그인시 정보 가져오기
     public ResponseEntity<LoginAfDto> logInAf(String id)
     {
-        String imgPath = "src/main/resources/static/profile/";
-
         try{
             Optional<UserEntity> userEntity = userRepository.findById(id);
             LoginAfDto res = new LoginAfDto(userEntity);
@@ -99,21 +100,10 @@ public class UserService {
             if(userPath.isEmpty()){
                 //프로필 올린적이 없음
             }else{
+                String imagePath = "static/profile/"+userPath;
                 //파일 불러오기
-                File imageFile = new File(imgPath+userPath);
-                byte[] imageBytes = Files.readAllBytes(imageFile.toPath());
-                
-                //콘솔 확인용
-                System.out.print("이미지 스트링: ");
-                for (byte b:imageBytes) {
-                    System.out.print(b + " ");
-                }
-                System.out.println(" ");
-                
-                
-                //Base64로 인코딩하기
-                String encodingImage = Base64.getEncoder().encodeToString(imageBytes);
-
+                String encodingImage = imageService.loadImageAsBase64(imagePath);
+                System.out.println("인코딩 코드: "+encodingImage);
                 //LoginAfDto의 String을 인코딩한 String으로 바꾸기
                 res.setUserImage(encodingImage);
             }
