@@ -40,12 +40,12 @@ export default function PasswordContainer() {
     client
       .post('/user/changePw', { account, password })
       .then((res) => {
-        if (res.data.status === 200) {
+        if (res.status === 200) {
           console.log('변경 성공');
           alert('비밀번호가 변경되었습니다.');
-        } else if (res.data.status === 404) {
+        } else if (res.status === 404) {
           alert('아이디를 찾을 수 없습니다.');
-        } else if (res.data.status === 400) {
+        } else if (res.status === 400) {
           console.log('변경 실패');
           alert('비밀번호 변경에 실패했습니다.');
         }
@@ -84,7 +84,6 @@ export default function PasswordContainer() {
     if ([form.password, form.passwordConfirm].includes('')) {
       setError('빈 칸을 모두 입력하세요.');
     } else if (form.password === form.passwordConfirm) {
-      console.log(form.password, profile.account);
       changePassword({ account: profile.account, password: form.password });
     } else {
       setError('비밀번호가 일치하지 않습니다. 다시 입력해 주세요.');
