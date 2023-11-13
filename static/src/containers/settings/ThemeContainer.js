@@ -38,7 +38,7 @@ export default function ThemeContainer() {
           console.log('테마 변경 성공');
 
           localStorage.setItem('theme', tempTheme);
-          window.location.reload();
+          // window.location.reload();
         } else if (res.status === 400) {
           console.log('테마 변경 실패');
         }
