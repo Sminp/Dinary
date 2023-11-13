@@ -2,6 +2,7 @@ package com.diary.controller;
 
 import com.diary.dto.LoginDto;
 import com.diary.dto.SignUpDto;
+import com.diary.dto.ThemeChangeDto;
 import com.diary.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -42,19 +43,33 @@ public class UserController {
     @PostMapping("/changePw")
     public ResponseEntity<?> changePw(@RequestBody LoginDto dto)
     {
+        System.out.println(dto.toString());
         String account = dto.getAccount();
         String newPw = dto.getPassword();
-        //확인용 콘솔 출력
-        System.out.println(account+" "+newPw);
         ResponseEntity<?> result = userService.changePw(account, newPw);
         return result;
     }
 
-    // /upload : 프로필 사진 변경
-    /*
-    @PostMapping("/upload")
-    public ResponseEntity<?>
+
+    @PostMapping("/theme")
+    public ResponseEntity<?> changeTheme(@RequestBody ThemeChangeDto dto)
     {
+        System.out.println(dto.toString());
+        //작업
+        String account = dto.getAccount();
+        String theme = dto.getTheme();
+        ResponseEntity<?> result = userService.changeTheme(account, theme);
+
+        //임시 포스트 요청 보낼예정
+
+        return result;
     }
-     */
+    // /upload : 프로필 사진 변경
+
+    /*
+    @PostMapping("/upload/{account}.json")
+    public ResponseEntity<?> uploadImage(@PathVariable String account, @RequestPart("file")MultipartFile file) {
+
+    }
+*/
 }

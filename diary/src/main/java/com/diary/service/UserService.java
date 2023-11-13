@@ -22,6 +22,7 @@ public class UserService {
     public UserService() {
     }
 
+    //회원가입
     public ResponseEntity<?> signUp(SignUpDto dto) {
         //id 중복확인
         String inputid = dto.getAccount();
@@ -87,26 +88,21 @@ public class UserService {
 
     }
 
-    @Autowired
-    ImageService imageService;
     //로그인시 정보 가져오기
     public ResponseEntity<LoginAfDto> logInAf(String id)
     {
+        //있는 아이디인지 체크
+        boolean bo = userRepository.existsById(id);
+        if(!bo){
+            LoginAfDto res = new LoginAfDto();
+            return ResponseEntity.status(404).body(res);
+        }
+        
         try{
+            //정보 가져오기(유저 테마, 프로필)
             Optional<UserEntity> userEntity = userRepository.findById(id);
             LoginAfDto res = new LoginAfDto(userEntity);
-            String userPath = res.getUserImage();
 
-            if(userPath.isEmpty()){
-                //프로필 올린적이 없음
-            }else{
-                String imagePath = "static/profile/"+userPath;
-                //파일 불러오기
-                String encodingImage = imageService.loadImageAsBase64(imagePath);
-                System.out.println("인코딩 코드: "+encodingImage);
-                //LoginAfDto의 String을 인코딩한 String으로 바꾸기
-                res.setUserImage(encodingImage);
-            }
             //보내주기
             return ResponseEntity.status(200).body(res);
         }catch(Exception error){
@@ -117,6 +113,7 @@ public class UserService {
 
     //비밀번호 변경
     public ResponseEntity<String> changePw(String account, String newPw){
+        System.out.println(account+", "+newPw);
         Optional<UserEntity> userOptional = userRepository.findByUsrId(account);
         try{
             if(userOptional.isPresent()){
@@ -128,6 +125,25 @@ public class UserService {
                 return ResponseEntity.status(200).body("비밀번호 변경 성공!");
             } else {
                 return ResponseEntity.status(404).body("없는 유저입니다");
+            }
+        }catch(Exception error){
+            return ResponseEntity.status(400).body("데이터베이스 오류");
+        }
+    }
+
+    //테마 변경
+    public ResponseEntity<String> changeTheme(String account, String theme)
+    {
+        Optional<UserEntity> userOptional = userRepository.findByUsrId(account);
+        try{
+            if(userOptional.isPresent())
+            {
+                UserEntity user = userOptional.get();
+                user.setUsrTheme(theme);
+                userRepository.save(user);
+                return ResponseEntity.status(200).body("테마 변경 성공!");
+            }else{
+                return ResponseEntity.status(404).body("유저가 존재하지 않음");
             }
         }catch(Exception error){
             return ResponseEntity.status(400).body("데이터베이스 오류");

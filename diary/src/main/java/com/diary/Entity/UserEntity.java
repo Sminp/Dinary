@@ -32,6 +32,7 @@ public class UserEntity {
         this.usrJoindate = Timestamp.valueOf(LocalDateTime.now().plusHours(9));
         //지금 db 시간이 asiaseoul로 안바뀌어서 utc + 9적용
         this.usrTheme = "basicTheme";
+        this.usrProfile = "/profile/de_fa_ul_t.jpg";
     }
 
     //로그인 할 때 가져올 정보 2개
