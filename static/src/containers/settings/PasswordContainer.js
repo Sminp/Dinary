@@ -52,6 +52,24 @@ export default function PasswordContainer() {
   const [auth, setAuth] = useState('');
   const [files, setFiles] = useState('');
 
+  const changePassword = ({ account, password }) =>
+    client
+      .post(`/user/changePw`, { account, password })
+      .then((res) => {
+        if (res.data.status === 200) {
+          console.log('변경 성공');
+          alert('비밀번호가 변경되었습니다.');
+        } else if (res.data.status === 404) {
+          alert('아이디를 찾을 수 없습니다.');
+        } else if (res.data.status === 400) {
+          console.log('변경 실패');
+          alert('비밀번호 변경에 실패했습니다.');
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
   const postUserImage = async (account, storedFilePath) => {
     await client
       .post(`/user/upload/${account}.json`, {
@@ -83,25 +101,10 @@ export default function PasswordContainer() {
       setError('빈 칸을 모두 입력하세요.');
     } else if (form.password === form.passwordConfirm) {
       changePassword(profile.account, form.password);
-      try {
-        setAuth(true);
-      } catch (e) {
-        setAuth(false);
-        console.log(e);
-      }
     } else {
       setError('비밀번호가 일치하지 않습니다. 다시 입력해 주세요.');
     }
   };
-
-  useEffect(() => {
-    if (auth === true) {
-      alert('비밀번호가 변경되었습니다.');
-    }
-    if (auth === false) {
-      alert('비밀번호 변경에 실패했습니다.');
-    }
-  }, [auth]);
 
   const onUpload = (e) => {
     const file = e.target.files[0];
