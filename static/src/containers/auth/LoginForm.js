@@ -40,12 +40,10 @@ export default function LoginForm() {
 
     setUser({
       ...user,
-      account: form.account,
+      account: account,
       userImage: user.data.userImage,
       userTheme: user.data.userTheme,
     });
-
-    // return { user };
   };
 
   const onChange = (e) => {
