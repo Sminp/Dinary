@@ -38,7 +38,7 @@ export default function PasswordContainer() {
 
   const changePassword = ({ account, password }) =>
     client
-      .post(`/user/changePw`, { account, password })
+      .post('/user/changePw', { account, password })
       .then((res) => {
         if (res.data.status === 200) {
           console.log('변경 성공');
@@ -84,6 +84,7 @@ export default function PasswordContainer() {
     if ([form.password, form.passwordConfirm].includes('')) {
       setError('빈 칸을 모두 입력하세요.');
     } else if (form.password === form.passwordConfirm) {
+      console.log(form.password, profile.account);
       changePassword(profile.account, form.password);
     } else {
       setError('비밀번호가 일치하지 않습니다. 다시 입력해 주세요.');
@@ -104,25 +105,6 @@ export default function PasswordContainer() {
       setFiles(e.target.files);
       postUserImage(profile.account, imageUrl);
     }
-
-    // const reader = new FileReader();
-
-    // reader.onload = () => {
-    //   const imageUrl = reader.result;
-    //   console.log(imageUrl);
-
-    //   setProfile({
-    //     ...profile,
-    //     userImage: imageUrl,
-    //   });
-    //   localStorage.setItem('user-image', imageUrl);
-    // };
-    // reader.readAsDataURL(file);
-
-    // base64로 변환하는 코드 수정하기
-
-    /*// 이미지 객체의 소스로 base64 데이터 할당
-img.src = 'data:image/jpeg;base64,' + base64ImageData; 이런식으로 디코딩한다는데 도움이되면좋겠네요! */
 
     try {
     } catch (e) {
