@@ -54,7 +54,7 @@ export default function LoginForm() {
     });
   };
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     if ([form.account, form.password].includes('')) {
       setError(`아이디 또는 비밀번호를 모두 입력하세요.`);
@@ -62,8 +62,8 @@ export default function LoginForm() {
     }
     // const response = login({ account: form.account, password: form.password });
 
-    login({ account: form.account, password: form.password });
-    getUser(form.account);
+    await login({ account: form.account, password: form.password });
+    await getUser(form.account);
 
     // if (response === false) {
     //   setAuth({ check: false });
