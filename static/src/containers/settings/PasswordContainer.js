@@ -34,7 +34,6 @@ export default function PasswordContainer() {
   const [form, setForm] = useRecoilState(passwordState);
   const [error, setError] = useState('');
   const [auth, setAuth] = useState('');
-  const [files, setFiles] = useState('');
 
   const changePassword = ({ account, password }) =>
     client
@@ -54,13 +53,17 @@ export default function PasswordContainer() {
         console.log(err);
       });
 
-  const postUserImage = async (account, storedFilePath) => {
+  const postUserImage = async (account, imageFile) => {
+    const formData = new FormData();
+    formData.append('image', imageFile);
+
     await client
-      .post(`/user/upload/${account}.json`, {
-        storedFilePath,
+      .post(`/user/upload/${account}.jpg`, {
+        formData,
       })
       .then((res) => {
         if (res.data) {
+          setProfile({ ...profile, userImage: res.data.imageFile });
           alert(res.data.msg);
         } else {
           alert(res.data.msg);
@@ -92,7 +95,6 @@ export default function PasswordContainer() {
 
   const onUpload = (e) => {
     const file = e.target.files[0];
-    const imageUrl = URL.createObjectURL(file);
     const correctForm = /(.*?)\.(jpg)$/; // |gif|png|jpeg|bmp|tif|heic| 삭제
     if (file.size > 1024 * 1024 * 10) {
       alert('10MB 이상의 이미지는 업로드 할 수 없습니다.');
@@ -101,8 +103,7 @@ export default function PasswordContainer() {
     if (!file.name.match(correctForm)) {
       alert('이미지 파일만 업로드가 가능합니다. (*.jpg)'); //, *.gif, *.png, *.jpeg, *.bmp, *.tif, *.heic 삭제
     } else {
-      setFiles(e.target.files);
-      postUserImage(profile.account, imageUrl);
+      postUserImage({ account: profile.account, imageFile: file });
     }
 
     try {
@@ -111,25 +112,25 @@ export default function PasswordContainer() {
     }
   };
 
-  const encodeFileToBase64 = (image) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(image);
-      reader.onload = (event) => resolve(event.target.result);
-      reader.onerror = (error) => reject(error);
-    });
-  };
+  // const encodeFileToBase64 = (image) => {
+  //   return new Promise((resolve, reject) => {
+  //     const reader = new FileReader();
+  //     reader.readAsDataURL(image);
+  //     reader.onload = (event) => resolve(event.target.result);
+  //     reader.onerror = (error) => reject(error);
+  //   });
+  // };
 
-  useEffect(() => {
-    if (files) {
-      setProfile([]);
-      Array.from(files).forEach((image) => {
-        encodeFileToBase64(image).then((data) =>
-          setProfile((prev) => [...prev, { userImage: image, url: data }]),
-        );
-      });
-    }
-  }, [files]);
+  // useEffect(() => {
+  //   if (files) {
+  //     setProfile([]);
+  //     Array.from(files).forEach((image) => {
+  //       encodeFileToBase64(image).then((data) =>
+  //         setProfile((prev) => [...prev, { userImage: data }]),
+  //       );
+  //     });
+  //   }
+  // }, [files]);
 
   return (
     <UserTemplate>
