@@ -63,7 +63,6 @@ export default function LoginForm() {
     // const response = login({ account: form.account, password: form.password });
 
     await login({ account: form.account, password: form.password });
-    await getUser(form.account);
 
     // if (response === false) {
     //   setAuth({ check: false });
@@ -81,6 +80,7 @@ export default function LoginForm() {
     if (auth.check === true) {
       try {
         console.log('로그인 성공');
+        getUser(form.account);
         navigate(`/${form.account}`);
       } catch (e) {
         console.log(e);
