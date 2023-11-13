@@ -5,7 +5,7 @@ import UserTemplate from '../../components/settings/UserTemplate';
 import PasswordChange from '../../components/settings/PasswordChange';
 import { userProfileState } from '../../State/userState';
 import { passwordState } from '../../State/authState';
-import { changePassword } from '../../lib/api/auth';
+// import { changePassword } from '../../lib/api/auth';
 // import { postUserImage } from '../../lib/api/user';
 import client from '../../lib/api/client'; // 하드코딩
 
@@ -28,22 +28,6 @@ const ContentBlock = styled.div`
     color: ${(props) => props.theme.subtext};
   }
 `;
-
-/* const fs = require("fs");
-app.post("/api/saveimgs", (req, res) => {
-    const fileCount = req.body.sendImgs.length; //넘어온 이미지 갯수
-    const timeStamp = +new Date();
-    
-    for (let i = 0; i < fileCount; i++) {
-        const imgPathTemp = process.env.DATA_PATH;
-        let fileName = imgPathTemp + "_" + timeStamp + "_" + i + ".jpg";
-
-        // 이미지 저장
-        fs.writeFileSync(fileName, req.body.sendImgs[i].replace(/^data:image\/jpeg;base64,/, ""), "base64");
-
-
-    }
-}); */
 
 export default function PasswordContainer() {
   const [profile, setProfile] = useRecoilState(userProfileState);
