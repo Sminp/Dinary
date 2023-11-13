@@ -85,7 +85,7 @@ export default function PasswordContainer() {
       setError('빈 칸을 모두 입력하세요.');
     } else if (form.password === form.passwordConfirm) {
       console.log(form.password, profile.account);
-      changePassword(profile.account, form.password);
+      changePassword({ account: profile.account, password: form.password });
     } else {
       setError('비밀번호가 일치하지 않습니다. 다시 입력해 주세요.');
     }
