@@ -29,17 +29,44 @@ const ContentBlock = styled.div`
   }
 `;
 
+/* const fs = require("fs");
+app.post("/api/saveimgs", (req, res) => {
+    const fileCount = req.body.sendImgs.length; //넘어온 이미지 갯수
+    const timeStamp = +new Date();
+    
+    for (let i = 0; i < fileCount; i++) {
+        const imgPathTemp = process.env.DATA_PATH;
+        let fileName = imgPathTemp + "_" + timeStamp + "_" + i + ".jpg";
+
+        // 이미지 저장
+        fs.writeFileSync(fileName, req.body.sendImgs[i].replace(/^data:image\/jpeg;base64,/, ""), "base64");
+
+
+    }
+}); */
+
 export default function PasswordContainer() {
   const [profile, setProfile] = useRecoilState(userProfileState);
   const [form, setForm] = useRecoilState(passwordState);
   const [error, setError] = useState('');
   const [auth, setAuth] = useState('');
+  const [files, setFiles] = useState('');
 
   const postUserImage = async (account, storedFilePath) => {
-    const userImage = await client.post(`/image/${account}.json`, {
-      storedFilePath,
-    });
-    return userImage;
+    await client
+      .post(`/user/upload/${account}.json`, {
+        storedFilePath,
+      })
+      .then((res) => {
+        if (res.data) {
+          alert(res.data.msg);
+        } else {
+          alert(res.data.msg);
+        }
+      })
+      .catch((err) => {
+        alert('전송 실패 : ' + err);
+      });
   };
 
   const onChange = (e) => {
@@ -87,26 +114,54 @@ export default function PasswordContainer() {
     if (!file.name.match(correctForm)) {
       alert('이미지 파일만 업로드가 가능합니다. (*.jpg)'); //, *.gif, *.png, *.jpeg, *.bmp, *.tif, *.heic 삭제
     } else {
-      setProfile({
-        ...profile,
-        userImage: imageUrl,
-      });
+      setFiles(e.target.files);
+      postUserImage(profile.account, imageUrl);
     }
 
-    const reader = new FileReader();
-    reader.readAsDataURL(e.target.files[0]);
-    console.log(imageUrl);
-    localStorage.setItem('user-image', imageUrl);
+    // const reader = new FileReader();
 
-    // postUserImage(profile.account, imageUrl);
+    // reader.onload = () => {
+    //   const imageUrl = reader.result;
+    //   console.log(imageUrl);
+
+    //   setProfile({
+    //     ...profile,
+    //     userImage: imageUrl,
+    //   });
+    //   localStorage.setItem('user-image', imageUrl);
+    // };
+    // reader.readAsDataURL(file);
+
+    // base64로 변환하는 코드 수정하기
+
+    /*// 이미지 객체의 소스로 base64 데이터 할당
+img.src = 'data:image/jpeg;base64,' + base64ImageData; 이런식으로 디코딩한다는데 도움이되면좋겠네요! */
+
     try {
-      // 여기에서 막힌다.
-      // 원래는 selector에 적어야 하는데 오류 생겨서 여기에 저장 확인 후 수정
-      // window.location.reload();
     } catch (e) {
       console.log('localStorage is not working');
     }
   };
+
+  const encodeFileToBase64 = (image) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(image);
+      reader.onload = (event) => resolve(event.target.result);
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
+  useEffect(() => {
+    if (files) {
+      setProfile([]);
+      Array.from(files).forEach((image) => {
+        encodeFileToBase64(image).then((data) =>
+          setProfile((prev) => [...prev, { userImage: image, url: data }]),
+        );
+      });
+    }
+  }, [files]);
 
   return (
     <UserTemplate>
