@@ -7,6 +7,7 @@ import com.diary.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 
 @RestController
@@ -66,10 +67,11 @@ public class UserController {
     }
     // /upload : 프로필 사진 변경
 
-    /*
-    @PostMapping("/upload/{account}.json")
-    public ResponseEntity<?> uploadImage(@PathVariable String account, @RequestPart("file")MultipartFile file) {
 
+    @PostMapping("/upload/{account}.jpg")
+    public ResponseEntity<?> uploadImage(@PathVariable String account, @RequestParam("file") MultipartFile file) {
+        ResponseEntity<?> result = userService.uploadUsrImage(account, file);
+        return result;
     }
-*/
+
 }

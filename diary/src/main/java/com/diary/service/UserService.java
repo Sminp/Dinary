@@ -7,19 +7,26 @@ import com.diary.dto.LoginDto;
 import com.diary.dto.SignInResponseDto;
 import com.diary.dto.SignUpDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Optional;
 //UserController 에 대한 기능 구현
 
 @Service
 public class UserService {
-
+    private final ResourceLoader resourceLoader;
     @Autowired
     UserRepository userRepository;
 
-    public UserService() {
+    public UserService(ResourceLoader resourceLoader) {
+        this.resourceLoader = resourceLoader;
     }
 
     //회원가입
@@ -151,4 +158,33 @@ public class UserService {
     }
 
 
+    //프로필 업로드
+    public ResponseEntity<String> uploadUsrImage(String account, MultipartFile file)
+    {
+        try{
+            //파일 저장하기
+            Resource resource = resourceLoader.getResource("classpath:static/profile/"+account+".jpg");
+            File newFile = resource.getFile();
+            Files.copy(file.getInputStream(), newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+            /*//아이디 존재유무 체크(디비호출많아져서 그냥 뺌)
+            if(!userRepository.existsById(account)){
+                return ResponseEntity.status(404).body("없는 아이디");
+            }*/
+            //디비에 프로필 url갱신 (디폴트일 경우를 위해)
+            try{
+                Optional<UserEntity> user = userRepository.findByUsrId(account);
+                UserEntity usr = user.get();
+                usr.setUsrProfile("/profile/"+account+".jpg");
+                userRepository.save(usr);
+            }catch(Exception e){
+                return ResponseEntity.status(400).body("데이터베이스 오류");
+            }
+            return ResponseEntity.status(200).body("/profile/"+account+".jpg");
+        } catch (Exception e){
+            //업로드 실패
+            return ResponseEntity.status(404).body("업로드 실패");
+        }
+
+    }
 }
