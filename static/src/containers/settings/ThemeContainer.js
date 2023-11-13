@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import styled from 'styled-components';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import UserTemplate from '../../components/settings/UserTemplate';
 import Theme from '../../components/settings/Theme';
-import { themeState } from '../../State/userState';
+import { themeState, userAccount } from '../../State/userState';
 import client from '../../lib/api/client';
 
 const ContentBlock = styled.div`
@@ -26,6 +26,7 @@ const ContentBlock = styled.div`
 `;
 
 export default function ThemeContainer() {
+  const account = useRecoilValue(userAccount);
   const [theme, setTheme] = useRecoilState(themeState);
   const [tempTheme, setTempTheme] = useState(theme);
 
@@ -52,7 +53,7 @@ export default function ThemeContainer() {
 
   const onClick = () => {
     setTheme(tempTheme);
-    postTheme({ account: localStorage.getItem('account'), theme: tempTheme });
+    postTheme({ account: account, theme: theme });
     // window.location.reload();
   };
 
