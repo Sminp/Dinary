@@ -54,7 +54,7 @@ export default function ThemeContainer() {
 
   const onClick = () => {
     setTheme(tempTheme);
-    postTheme({ account: account, theme: theme });
+    postTheme({ account: account, theme: tempTheme });
   };
 
   return (
