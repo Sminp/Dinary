@@ -34,11 +34,11 @@ export default function ThemeContainer() {
     client
       .post('/user/theme', { account, theme })
       .then((res) => {
-        if (res.data.status === 200) {
+        if (res.status === 200) {
           console.log('테마 변경 성공');
 
           localStorage.setItem('theme', tempTheme);
-        } else if (res.data.status === 400) {
+        } else if (res.status === 400) {
           console.log('테마 변경 실패');
         }
       })
