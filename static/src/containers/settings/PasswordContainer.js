@@ -58,7 +58,10 @@ export default function PasswordContainer() {
       .post(`/user/upload/${account}.jpg`, formData)
       .then((res) => {
         if (res.data) {
-          setProfile({ ...profile, userImage: res.data.imageFile });
+          setTimeout(() => {
+            setProfile({ ...profile, userImage: res.data.userImage });
+          }, 1000);
+
           alert(res.data.msg);
         } else {
           alert(res.data.msg);
@@ -104,9 +107,6 @@ export default function PasswordContainer() {
       postUserImage(profile.account, formData);
       localStorage.removeItem('user-image');
       localStorage.setItem('user-image', fileUrl);
-      // setTimeout(() => {
-      //   window.location.reload();
-      // }, 500);
     }
 
     try {
