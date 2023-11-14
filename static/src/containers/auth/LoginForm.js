@@ -15,9 +15,9 @@ import client from '../../lib/api/client'; // 하드코딩
 export default function LoginForm() {
   const [form, setForm] = useRecoilState(loginState);
   const [auth, setAuth] = useRecoilState(authCheckState);
-  const setUser = useSetRecoilState(userState);
-  const setProfile = useSetRecoilState(userImageState);
-  const setTheme = useSetRecoilState(userThemeState);
+  const [user, setUser] = useRecoilState(userState);
+  const [profile, setProfile] = useRecoilState(userImageState);
+  const [theme, setTheme] = useRecoilState(userThemeState);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
@@ -41,8 +41,6 @@ export default function LoginForm() {
 
   const getUser = async (account) => {
     const user = await client.get(`/user/${account}`);
-    localStorage.setItem('theme', JSON.stringify(user.data.userTheme));
-    localStorage.setItem('user-image', JSON.stringify(user.data.userImage));
 
     setUser({
       account: account,
@@ -86,6 +84,10 @@ export default function LoginForm() {
       try {
         console.log('로그인 성공');
         getUser(form.account);
+        console.log(form.account);
+        localStorage.setItem('account', form.account);
+        localStorage.setItem('theme', theme.userTheme);
+        localStorage.setItem('user-image', profile.userImage);
         navigate(`/${form.account}`);
       } catch (e) {
         console.log(e);

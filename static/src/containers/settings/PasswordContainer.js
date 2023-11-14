@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import UserTemplate from '../../components/settings/UserTemplate';
 import PasswordChange from '../../components/settings/PasswordChange';
-import { userAccount, userImageState } from '../../State/userState';
+import { userAccount, userImage, userImageState } from '../../State/userState';
 import { passwordState } from '../../State/authState';
 // import { changePassword } from '../../lib/api/auth';
 // import { postUserImage } from '../../lib/api/user';
@@ -32,10 +32,11 @@ const ContentBlock = styled.div`
 export default function PasswordContainer() {
   const account = useRecoilValue(userAccount);
   const [profile, setProfile] = useRecoilState(userImageState);
+  const userProfile = useRecoilValue(userImage);
   const [form, setForm] = useRecoilState(passwordState);
   const [error, setError] = useState('');
   const [auth, setAuth] = useState('');
-  const user = { account: account, userImage: profile.userImage };
+  const user = { account: account, userImage: userProfile };
 
   const changePassword = ({ account, password }) =>
     client
@@ -62,8 +63,11 @@ export default function PasswordContainer() {
         console.log(res);
         if (res.data) {
           console.log(res.data);
+          const serverPath = client.defaults.baseURL;
+          const userPath = `${serverPath}${res.data.userImage}`;
+          console.log(userPath);
           setTimeout(() => {
-            setProfile({ userImage: res.data.userImage });
+            setProfile({ userImage: userPath });
           }, 1000);
           alert(res.data.msg);
         } else {
@@ -96,7 +100,7 @@ export default function PasswordContainer() {
 
   const onUpload = (e) => {
     const file = e.target.files[0];
-    const fileUrl = URL.createObjectURL(file);
+    // const fileUrl = URL.createObjectURL(file);
     const correctForm = /(.*?)\.(jpg)$/; // |gif|png|jpeg|bmp|tif|heic| 삭제
     if (file.size > 1024 * 1024 * 10) {
       alert('10MB 이상의 이미지는 업로드 할 수 없습니다.');
@@ -108,8 +112,8 @@ export default function PasswordContainer() {
       const formData = new FormData();
       formData.append('image', file);
       postUserImage(account, formData);
-      localStorage.removeItem('user-image');
-      localStorage.setItem('user-image', fileUrl);
+      window.location.reload();
+      localStorage.setItem('user-image', profile);
     }
 
     try {

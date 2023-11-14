@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useRecoilValue, useResetRecoilState } from 'recoil';
 import {
   userAccount,
+  userImage,
   userImageState,
   userState,
   userThemeState,
@@ -12,7 +13,7 @@ import { authCheckState } from '../../State/authState';
 
 export default function HeaderContainer() {
   const account = useRecoilValue(userAccount);
-  const userImage = useRecoilValue(userImageState);
+  const userProfile = useRecoilValue(userImage);
   const resetUser = useResetRecoilState(userState);
   const resetProfile = useResetRecoilState(userImageState);
   const resetTheme = useResetRecoilState(userThemeState);
@@ -34,10 +35,6 @@ export default function HeaderContainer() {
   };
 
   return (
-    <Header
-      account={account}
-      userImage={userImage.userImage}
-      onLogout={handleLogout}
-    />
+    <Header account={account} userImage={userProfile} onLogout={handleLogout} />
   );
 }

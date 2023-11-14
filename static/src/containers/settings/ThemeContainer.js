@@ -38,7 +38,6 @@ export default function ThemeContainer() {
           console.log('테마 변경 성공');
 
           localStorage.setItem('theme', tempTheme);
-          // window.location.reload();
         } else if (res.status === 400) {
           console.log('테마 변경 실패');
         }
@@ -53,8 +52,10 @@ export default function ThemeContainer() {
   };
 
   const onClick = () => {
+    localStorage.setItem('theme', tempTheme);
     setTheme({ userTheme: tempTheme });
     postTheme({ account: account, theme: tempTheme });
+    window.location.reload();
   };
 
   return (
