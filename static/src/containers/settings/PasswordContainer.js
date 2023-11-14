@@ -35,7 +35,7 @@ export default function PasswordContainer() {
   const [form, setForm] = useRecoilState(passwordState);
   const [error, setError] = useState('');
   const [auth, setAuth] = useState('');
-  const user = { account: account, userImage: profile };
+  const user = { account: account, userImage: profile.userImage };
 
   const changePassword = ({ account, password }) =>
     client
