@@ -5,13 +5,20 @@ import AuthForm from '../../components/auth/AuthForm';
 import { authCheckState, loginState } from '../../State/authState';
 // import { login } from '../../lib/api/auth';
 // import { getUser } from '../../lib/api/user';
-import { userState } from '../../State/userState';
+import {
+  userImageState,
+  userState,
+  userThemeState,
+} from '../../State/userState';
 import client from '../../lib/api/client'; // 하드코딩
+import { useSetRecoilState } from '../../../node_modules/recoil/index';
 
 export default function LoginForm() {
   const [form, setForm] = useRecoilState(loginState);
   const [auth, setAuth] = useRecoilState(authCheckState);
-  const [user, setUser] = useRecoilState(userState);
+  const setUser = useSetRecoilState(userState);
+  const setProfile = useSetRecoilState(userImageState);
+  const setTheme = useSetRecoilState(userThemeState);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
@@ -39,11 +46,10 @@ export default function LoginForm() {
     localStorage.setItem('user-image', JSON.stringify(user.data.userImage));
 
     setUser({
-      ...user,
       account: account,
-      userImage: user.data.userImage,
-      userTheme: user.data.userTheme,
     });
+    setProfile({ userImage: user.data.userImage });
+    setTheme({ userTheme: user.data.userTheme });
   };
 
   const onChange = (e) => {

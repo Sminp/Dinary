@@ -3,11 +3,12 @@ import styled from 'styled-components';
 import { useRecoilState } from 'recoil';
 import UserTemplate from '../../components/settings/UserTemplate';
 import PasswordChange from '../../components/settings/PasswordChange';
-import { userProfileState } from '../../State/userState';
+import { userAccount, userImageState } from '../../State/userState';
 import { passwordState } from '../../State/authState';
 // import { changePassword } from '../../lib/api/auth';
 // import { postUserImage } from '../../lib/api/user';
 import client from '../../lib/api/client'; // 하드코딩
+import { useRecoilValue } from '../../../node_modules/recoil/index';
 
 const ContentBlock = styled.div`
   width: 746px;
@@ -30,10 +31,12 @@ const ContentBlock = styled.div`
 `;
 
 export default function PasswordContainer() {
-  const [profile, setProfile] = useRecoilState(userProfileState);
+  const account = useRecoilValue(userAccount);
+  const [profile, setProfile] = useRecoilState(userImageState);
   const [form, setForm] = useRecoilState(passwordState);
   const [error, setError] = useState('');
   const [auth, setAuth] = useState('');
+  const user = { account: account, userImage: profile };
 
   const changePassword = ({ account, password }) =>
     client
@@ -60,6 +63,9 @@ export default function PasswordContainer() {
         console.log(res);
         if (res.data) {
           console.log(res.data);
+          setTimeout(() => {
+            setProfile({ userImage: res.data.userImage });
+          }, 1000);
           alert(res.data.msg);
         } else {
           alert(res.data.msg);
@@ -83,7 +89,7 @@ export default function PasswordContainer() {
     if ([form.password, form.passwordConfirm].includes('')) {
       setError('빈 칸을 모두 입력하세요.');
     } else if (form.password === form.passwordConfirm) {
-      changePassword({ account: profile.account, password: form.password });
+      changePassword({ account: account, password: form.password });
     } else {
       setError('비밀번호가 일치하지 않습니다. 다시 입력해 주세요.');
     }
@@ -102,10 +108,7 @@ export default function PasswordContainer() {
     } else {
       const formData = new FormData();
       formData.append('image', file);
-      postUserImage(profile.account, formData);
-      setTimeout(() => {
-        setProfile({ ...profile, userImage: fileUrl });
-      }, 1000);
+      postUserImage(account, formData);
       localStorage.removeItem('user-image');
       localStorage.setItem('user-image', fileUrl);
     }
@@ -116,33 +119,13 @@ export default function PasswordContainer() {
     }
   };
 
-  // const encodeFileToBase64 = (image) => {
-  //   return new Promise((resolve, reject) => {
-  //     const reader = new FileReader();
-  //     reader.readAsDataURL(image);
-  //     reader.onload = (event) => resolve(event.target.result);
-  //     reader.onerror = (error) => reject(error);
-  //   });
-  // };
-
-  // useEffect(() => {
-  //   if (files) {
-  //     setProfile([]);
-  //     Array.from(files).forEach((image) => {
-  //       encodeFileToBase64(image).then((data) =>
-  //         setProfile((prev) => [...prev, { userImage: data }]),
-  //       );
-  //     });
-  //   }
-  // }, [files]);
-
   return (
     <UserTemplate>
       <ContentBlock>
         <PasswordChange
           onChange={onChange}
           onUpload={onUpload}
-          profile={profile}
+          profile={user}
           onSubmit={onSubmit}
           form={form}
           error={error}

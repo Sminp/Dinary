@@ -6,17 +6,29 @@ export const userState = atom({
   key: 'userState',
   default: {
     account: 'account',
-    userImage: '/images/User/Profile.svg',
+  },
+});
+
+export const userThemeState = atom({
+  key: 'userThemeState',
+  default: {
     userTheme: 'basicTheme',
+  },
+});
+
+export const userImageState = atom({
+  key: 'userImageState',
+  default: {
+    userImage: '/images/User/Profile.svg',
   },
 });
 
 export const getUserState = selector({
   key: 'getUserState',
   get: async ({ get }) => {
-    const account = localStorage.getItem('account');
-    const userImage = localStorage.getItem('user-image');
-    const userTheme = localStorage.getItem('theme');
+    const account = userAccount;
+    const userImage = userImageState;
+    const userTheme = userThemeState;
     console.log(account, userImage, userTheme);
 
     return { account, userTheme, userImage };
@@ -28,39 +40,5 @@ export const userAccount = selector({
   get: ({ get }) => {
     const user = get(userState);
     return user.account;
-  },
-});
-
-// 프로필 사진 수정
-export const userProfileState = selector({
-  key: 'userProfileState',
-  get: ({ get }) => {
-    const user = get(userState);
-    return {
-      account: user.account,
-      userImage: user.userImage,
-    };
-  },
-  set: ({ set }, newValue) => {
-    set(userState, (oldValue) => ({
-      ...oldValue,
-      userImage: newValue,
-    }));
-  },
-});
-
-// 테마 수정
-export const themeState = selector({
-  key: 'themeState',
-  get: async ({ get }) => {
-    const user = get(userState);
-    return user.userTheme;
-  },
-  set: ({ set }, newValue) => {
-    localStorage.setItem('theme', JSON.stringify(newValue));
-    set(userState, (oldValue) => ({
-      ...oldValue,
-      userTheme: newValue,
-    }));
   },
 });
