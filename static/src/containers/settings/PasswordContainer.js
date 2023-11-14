@@ -53,7 +53,7 @@ export default function PasswordContainer() {
         console.log(err);
       });
 
-  const postUserImage = async ({ account, formData }) => {
+  const postUserImage = async (account, formData) => {
     await client
       .post(`/user/upload/${account}.jpg`, {
         formData,
@@ -103,7 +103,7 @@ export default function PasswordContainer() {
     } else {
       const formData = new FormData();
       formData.append('image', file);
-      postUserImage({ account: profile.account, formData: file });
+      postUserImage(profile.account, formData);
       localStorage.setItem('user-image', fileUrl);
       setTimeout(() => {
         window.location.reload();
