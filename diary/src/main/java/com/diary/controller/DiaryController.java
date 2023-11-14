@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.*;
 public class DiaryController {
     @Autowired DiaryService diaryService;
 
-    @GetMapping("/new")
+    @GetMapping("/{account}")
     public ResponseEntity<String> postForm() {
         return ResponseEntity.ok("WritePage");
     }
 
-    @PostMapping("/new")
+    @PostMapping("/{account}")
     public ResponseEntity<String> post(@ModelAttribute DiaryDto diaryDto) {
         System.out.println("diaryDto = " + diaryDto.toString());
         diaryService.save(diaryDto);
