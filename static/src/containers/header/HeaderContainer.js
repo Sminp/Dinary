@@ -34,6 +34,10 @@ export default function HeaderContainer() {
   };
 
   return (
-    <Header account={account} userImage={userImage} onLogout={handleLogout} />
+    <Header
+      account={account}
+      userImage={userImage.userImage}
+      onLogout={handleLogout}
+    />
   );
 }

@@ -15,6 +15,7 @@ import ThemeContainer from './containers/settings/ThemeContainer';
 
 export default function App() {
   const currentTheme = useRecoilValue(userTheme);
+  console.log(currentTheme);
 
   return (
     <ThemeProvider theme={themes[currentTheme]}>
