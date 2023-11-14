@@ -55,9 +55,7 @@ export default function PasswordContainer() {
 
   const postUserImage = async (account, formData) => {
     await client
-      .post(`/user/upload/${account}.jpg`, {
-        formData,
-      })
+      .post(`/user/upload/${account}.jpg`, formData)
       .then((res) => {
         if (res.data) {
           setProfile({ ...profile, userImage: res.data.imageFile });
@@ -104,10 +102,10 @@ export default function PasswordContainer() {
       const formData = new FormData();
       formData.append('image', file);
       postUserImage(profile.account, formData);
-      localStorage.setItem('user-image', fileUrl);
-      setTimeout(() => {
-        window.location.reload();
-      }, 500);
+      // localStorage.setItem('user-image', fileUrl);
+      // setTimeout(() => {
+      //   window.location.reload();
+      // }, 500);
     }
 
     try {
