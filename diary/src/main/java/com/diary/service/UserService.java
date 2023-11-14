@@ -2,11 +2,9 @@ package com.diary.service;
 
 import com.diary.Entity.UserEntity;
 import com.diary.Repository.UserRepository;
-import com.diary.dto.LoginAfDto;
-import com.diary.dto.LoginDto;
-import com.diary.dto.SignInResponseDto;
-import com.diary.dto.SignUpDto;
+import com.diary.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +27,8 @@ public class UserService {
         this.resourceLoader = resourceLoader;
     }
 
+    @Value("${custom.file.path.profile}")
+    private String profilePath;
     //회원가입
     public ResponseEntity<?> signUp(SignUpDto dto) {
         //id 중복확인
@@ -158,12 +158,20 @@ public class UserService {
     }
 
 
+
     //프로필 업로드
-    public ResponseEntity<String> uploadUsrImage(String account, MultipartFile file)
+    public ResponseEntity<ResponseDto> uploadUsrImage(String account, MultipartFile file)
     {
+
+        System.out.println(file.toString());
         try{
             //파일 저장하기
-            Resource resource = resourceLoader.getResource("classpath:static/profile/"+account+".jpg");
+            Resource resource = resourceLoader.getResource("file:"+profilePath+account+".jpg");
+            if(!resource.exists())
+            {
+                File newF = new File("file:"+profilePath+account+".jpg");
+                resource = resourceLoader.getResource("file:"+profilePath+account+".jpg");
+            }
             File newFile = resource.getFile();
             Files.copy(file.getInputStream(), newFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
@@ -178,12 +186,15 @@ public class UserService {
                 usr.setUsrProfile("/profile/"+account+".jpg");
                 userRepository.save(usr);
             }catch(Exception e){
-                return ResponseEntity.status(400).body("데이터베이스 오류");
+                ResponseDto dto = new ResponseDto("/profile/de_fa_ul_t.jpg", "데이터베이스 오류");
+                return ResponseEntity.status(400).body(dto);
             }
-            return ResponseEntity.status(200).body("/profile/"+account+".jpg");
+            ResponseDto dto = new ResponseDto("/profile/"+account+".jpg", "변경 성공!");
+            return ResponseEntity.status(200).body(dto);
         } catch (Exception e){
             //업로드 실패
-            return ResponseEntity.status(404).body("업로드 실패");
+            ResponseDto dto = new ResponseDto("profile/de_fa_ul_t.jpg", "업로드 실패!");
+            return ResponseEntity.status(404).body(dto);
         }
 
     }

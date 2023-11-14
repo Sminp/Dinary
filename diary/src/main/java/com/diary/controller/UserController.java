@@ -1,6 +1,7 @@
 package com.diary.controller;
 
 import com.diary.dto.LoginDto;
+import com.diary.dto.ResponseDto;
 import com.diary.dto.SignUpDto;
 import com.diary.dto.ThemeChangeDto;
 import com.diary.service.UserService;
@@ -65,13 +66,14 @@ public class UserController {
 
         return result;
     }
+
+
     // /upload : 프로필 사진 변경
-
-
     @PostMapping("/upload/{account}.jpg")
-    public ResponseEntity<?> uploadImage(@PathVariable String account, @RequestParam("file") MultipartFile file) {
-        ResponseEntity<?> result = userService.uploadUsrImage(account, file);
+    public ResponseEntity<ResponseDto> uploadImage(@PathVariable String account, @RequestParam("image") MultipartFile file) {
+        ResponseEntity<ResponseDto> result = userService.uploadUsrImage(account, file);
         return result;
     }
+
 
 }

@@ -1,5 +1,6 @@
 package com.diary.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -15,22 +16,25 @@ public class ConnectAI_Service {
     private RestTemplate restTemplate;
     private String AI_Server_URL;
 
+    @Value("${custom.file.path.background}")
+    private String backgroundPath;
+
     public ConnectAI_Service(String flaskServerUrl){
         this.restTemplate = new RestTemplate();
         this.AI_Server_URL = flaskServerUrl;
     }
 
-    public byte[] requestImage(String diary_content){
+    public String requestImage(String diary_content){
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> requestEntity = new HttpEntity<>(diary_content, headers);
-        return restTemplate.postForObject(AI_Server_URL, requestEntity, byte[].class);
+        return restTemplate.postForObject(AI_Server_URL, requestEntity, String.class);
     }
 
     public void saveImage(byte[] imageBytes, String imageName)
     {
         try{
-            String folderPath = "classpath:static/background/";
+            String folderPath = "file:"+backgroundPath;
             String filePath = folderPath + imageName;
             File file = new File(filePath);
 

@@ -1,3 +1,4 @@
+
 package com.diary.config;
 
 
@@ -15,7 +16,9 @@ public class WebConfig implements WebMvcConfigurer {
                     .allowedOriginPatterns("*")
                     .allowedMethods("*")
                     .allowedHeaders("*")
+                    .exposedHeaders("*")
                     .allowCredentials(true);
     }
 
 }
+
