@@ -53,10 +53,7 @@ export default function PasswordContainer() {
         console.log(err);
       });
 
-  const postUserImage = async (account, imageFile) => {
-    const formData = new FormData();
-    formData.append('image', imageFile);
-
+  const postUserImage = async ({ account, formData }) => {
     await client
       .post(`/user/upload/${account}.jpg`, {
         formData,
@@ -95,6 +92,7 @@ export default function PasswordContainer() {
 
   const onUpload = (e) => {
     const file = e.target.files[0];
+    const fileUrl = URL.createObjectURL(file);
     const correctForm = /(.*?)\.(jpg)$/; // |gif|png|jpeg|bmp|tif|heic| 삭제
     if (file.size > 1024 * 1024 * 10) {
       alert('10MB 이상의 이미지는 업로드 할 수 없습니다.');
@@ -103,7 +101,13 @@ export default function PasswordContainer() {
     if (!file.name.match(correctForm)) {
       alert('이미지 파일만 업로드가 가능합니다. (*.jpg)'); //, *.gif, *.png, *.jpeg, *.bmp, *.tif, *.heic 삭제
     } else {
-      postUserImage({ account: profile.account, imageFile: file });
+      const formData = new FormData();
+      formData.append('image', file);
+      postUserImage({ account: profile.account, formData: file });
+      localStorage.setItem('userImage', fileUrl);
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
     }
 
     try {
