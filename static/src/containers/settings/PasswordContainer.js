@@ -57,11 +57,9 @@ export default function PasswordContainer() {
     await client
       .post(`/user/upload/${account}.jpg`, formData)
       .then((res) => {
+        console.log(res);
         if (res.data) {
-          setTimeout(() => {
-            setProfile({ ...profile, userImage: res.data.userImage });
-          }, 1000);
-
+          console.log(res.data);
           alert(res.data.msg);
         } else {
           alert(res.data.msg);
@@ -105,6 +103,9 @@ export default function PasswordContainer() {
       const formData = new FormData();
       formData.append('image', file);
       postUserImage(profile.account, formData);
+      setTimeout(() => {
+        setProfile({ ...profile, userImage: fileUrl });
+      }, 1000);
       localStorage.removeItem('user-image');
       localStorage.setItem('user-image', fileUrl);
     }
