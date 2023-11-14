@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import UserTemplate from '../../components/settings/UserTemplate';
 import Theme from '../../components/settings/Theme';
-import { themeState, userAccount } from '../../State/userState';
+import { userAccount, userThemeState } from '../../State/userState';
 import client from '../../lib/api/client';
 
 const ContentBlock = styled.div`
@@ -27,7 +27,7 @@ const ContentBlock = styled.div`
 
 export default function ThemeContainer() {
   const account = useRecoilValue(userAccount);
-  const [theme, setTheme] = useRecoilState(themeState);
+  const [theme, setTheme] = useRecoilState(userThemeState);
   const [tempTheme, setTempTheme] = useState(theme);
 
   const postTheme = ({ account, theme }) => {

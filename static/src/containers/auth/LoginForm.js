@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import AuthForm from '../../components/auth/AuthForm';
 import { authCheckState, loginState } from '../../State/authState';
 // import { login } from '../../lib/api/auth';
@@ -11,7 +11,6 @@ import {
   userThemeState,
 } from '../../State/userState';
 import client from '../../lib/api/client'; // 하드코딩
-import { useSetRecoilState } from '../../../node_modules/recoil/index';
 
 export default function LoginForm() {
   const [form, setForm] = useRecoilState(loginState);

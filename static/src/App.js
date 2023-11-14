@@ -8,13 +8,13 @@ import WritePage from './pages/WritePage';
 import PostPage from './pages/PostPage';
 import SettingsPage from './pages/SettingsPage';
 import { ThemeProvider } from 'styled-components';
-import { themeState } from './State/userState';
+import { userTheme } from './State/userState';
 import { themes } from './lib/styles/theme';
 import PasswordContainer from './containers/settings/PasswordContainer';
 import ThemeContainer from './containers/settings/ThemeContainer';
 
 export default function App() {
-  const currentTheme = useRecoilValue(themeState);
+  const currentTheme = useRecoilValue(userTheme);
 
   return (
     <ThemeProvider theme={themes[currentTheme]}>

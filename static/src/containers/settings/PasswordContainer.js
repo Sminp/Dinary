@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import UserTemplate from '../../components/settings/UserTemplate';
 import PasswordChange from '../../components/settings/PasswordChange';
 import { userAccount, userImageState } from '../../State/userState';
@@ -8,7 +8,6 @@ import { passwordState } from '../../State/authState';
 // import { changePassword } from '../../lib/api/auth';
 // import { postUserImage } from '../../lib/api/user';
 import client from '../../lib/api/client'; // 하드코딩
-import { useRecoilValue } from '../../../node_modules/recoil/index';
 
 const ContentBlock = styled.div`
   width: 746px;

@@ -42,3 +42,11 @@ export const userAccount = selector({
     return user.account;
   },
 });
+
+export const userTheme = selector({
+  key: 'userTheme',
+  get: ({ get }) => {
+    const theme = get(userThemeState);
+    return theme.userTheme;
+  },
+});
