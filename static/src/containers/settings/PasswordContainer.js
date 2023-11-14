@@ -104,7 +104,7 @@ export default function PasswordContainer() {
       const formData = new FormData();
       formData.append('image', file);
       postUserImage({ account: profile.account, formData: file });
-      localStorage.setItem('userImage', fileUrl);
+      localStorage.setItem('user-image', fileUrl);
       setTimeout(() => {
         window.location.reload();
       }, 500);
