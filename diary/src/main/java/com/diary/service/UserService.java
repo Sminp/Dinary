@@ -20,10 +20,11 @@ import java.util.Optional;
 @Service
 public class UserService {
     private final ResourceLoader resourceLoader;
-    @Autowired
-    UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    public UserService(ResourceLoader resourceLoader) {
+    @Autowired
+    public UserService(UserRepository userRepository, ResourceLoader resourceLoader) {
+        this.userRepository = userRepository;
         this.resourceLoader = resourceLoader;
     }
 

@@ -26,6 +26,12 @@ public class UserEntity {
     private String usrProfile;
     private String usrTheme;
 
+    /*
+    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL)
+    private List<DiaryEntity> diaries;
+    */
+
+
     public UserEntity(SignUpDto dto) {
         this.usrId = dto.getAccount();
         this.usrPw = dto.getPassword();

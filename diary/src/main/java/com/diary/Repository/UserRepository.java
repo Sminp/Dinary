@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, String> {
     //아이디랑 비밀번호가 일치하는 유저가 존재하는지 확인
-    public boolean existsByUsrIdAndUsrPw(String usrId, String usrPw);
+    boolean existsByUsrIdAndUsrPw(String usrId, String usrPw);
 
     Optional<UserEntity> findByUsrId(String usrId);
 }

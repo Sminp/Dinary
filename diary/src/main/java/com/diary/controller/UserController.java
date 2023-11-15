@@ -61,9 +61,6 @@ public class UserController {
         String account = dto.getAccount();
         String theme = dto.getTheme();
         ResponseEntity<?> result = userService.changeTheme(account, theme);
-
-        //임시 포스트 요청 보낼예정
-
         return result;
     }
 
