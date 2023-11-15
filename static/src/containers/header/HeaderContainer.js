@@ -32,6 +32,7 @@ export default function HeaderContainer() {
     localStorage.removeItem('user-image');
     logout();
     navigate('/');
+    window.location.reload();
   };
 
   return (
