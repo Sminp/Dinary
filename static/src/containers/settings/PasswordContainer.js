@@ -57,19 +57,17 @@ export default function PasswordContainer() {
       });
 
   const postUserImage = async (account, formData) => {
-    await client
-      .post(`/user/upload/${account}.jpg`, formData)
-      .then((res) => {
-        if (res.data) {
-          alert(res.data.msg);
-          return res;
-        } else {
-          alert(res.data.msg);
-        }
-      })
-      .catch((err) => {
-        alert('전송 실패 : ' + err);
-      });
+    try {
+      const res = await client.post(`/user/upload/${account}.jpg`, formData);
+      if (res.data) {
+        alert(res.data.msg);
+        return res;
+      } else {
+        alert(res.data.msg);
+      }
+    } catch (err) {
+      alert('전송 실패 : ' + err);
+    }
   };
 
   const onChange = (e) => {
@@ -107,15 +105,18 @@ export default function PasswordContainer() {
       const serverPath = client.defaults.baseURL;
       const promise = postUserImage(account, formData);
       console.log(promise);
-      const getData = async () => {
-        await promise.then((res) => {
+      const getData = () => {
+        promise.then((res) => {
+          console.log(`${serverPath}${res.data.userImage}`);
           setProfile({ userImage: `${serverPath}${res.data.userImage}` });
           localStorage.setItem('user-image', res.data.userImage);
         });
       };
 
       getData();
-      window.location.reload();
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
     }
 
     try {
