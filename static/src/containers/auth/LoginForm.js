@@ -3,8 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import AuthForm from '../../components/auth/AuthForm';
 import { authCheckState, loginState } from '../../State/authState';
-// import { login } from '../../lib/api/auth';
-// import { getUser } from '../../lib/api/user';
 import {
   userImageState,
   userState,
@@ -97,7 +95,10 @@ export default function LoginForm() {
         setUsers({ account: form.account });
         localStorage.setItem('account', form.account);
 
-        navigate(`/${form.account}`);
+        setTimeout(() => {
+          navigate(`/${form.account}`);
+          window.location.reload();
+        }, 100);
       } catch (e) {
         console.log(e);
       }
