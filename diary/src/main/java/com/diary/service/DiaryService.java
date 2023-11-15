@@ -3,6 +3,7 @@ package com.diary.service;
 import com.diary.Entity.DiaryEntity;
 import com.diary.Repository.DiaryRepository;
 import com.diary.Repository.UserRepository;
+import com.diary.dto.DeleteDto;
 import com.diary.dto.RewriteDto;
 import com.diary.dto.WriteDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,5 +80,26 @@ public class DiaryService {
             return ResponseEntity.status(400).body("데이터 베이스 오류");
         }
 
+    }
+
+    //유저의 글 삭제하기
+    public ResponseEntity<String> diaryDelete(DeleteDto deleteDto){
+        Long id = deleteDto.getId();
+        String account = deleteDto.getAccount();
+        try{
+            Optional<DiaryEntity> de = diaryRepository.findByIdAndUsrId(id, account);
+            if(de.isEmpty()){
+                System.out.println("없는 일기");
+                return ResponseEntity.status(404).body("없는 일기입니다.");
+            }
+            DiaryEntity wantDelete = de.get();
+            //삭제를 의미하는 0으로 만듭니다.
+            wantDelete.setActivate(0);
+            diaryRepository.save(wantDelete);
+            return ResponseEntity.status(200).body("삭제 성공!");
+        }catch(Exception e){
+            System.out.println("데이터베이스 오류입니다. 데이터베이스 작동중지");
+            return ResponseEntity.status(400).body("데이터베이스 오류");
+        }
     }
 }
