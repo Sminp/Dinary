@@ -1,9 +1,6 @@
 package com.diary.controller;
 
-import com.diary.dto.DeleteDto;
-import com.diary.dto.DiaryListDto;
-import com.diary.dto.RewriteDto;
-import com.diary.dto.WriteDto;
+import com.diary.dto.*;
 import com.diary.service.DiaryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +52,14 @@ public class DiaryController {
     public ResponseEntity<?> listedDiary(@RequestBody DiaryListDto diaryListDto) {
         System.out.println("아이디, 년, 월 요청: "+ diaryListDto.toString());
         ResponseEntity<?> result = diaryService.diaryList(diaryListDto);
+        return result;
+    }
+
+    //글 불러오기(수정하려고)
+    @PostMapping("/load")
+    public ResponseEntity<?> loadDiary(@RequestBody LoadDto loadDto){
+        System.out.println("글id, 어카운트 요청: "+loadDto.toString());
+        ResponseEntity<?> result = diaryService.diaryLoad(loadDto.getId(), loadDto.getAccount());
         return result;
     }
 }

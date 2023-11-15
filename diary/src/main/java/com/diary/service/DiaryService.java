@@ -116,4 +116,25 @@ public class DiaryService {
             return ResponseEntity.status(400).body("데이터베이스 오류");
         }
     }
+
+
+    //유저의 일기내용 불러오기(수정하려고 할 때)
+    public ResponseEntity<?> diaryLoad(Long id, String account) {
+        try{
+            Optional<DiaryEntity> de = diaryRepository.findByIdAndUsrId(id, account);
+            if(de.isPresent()){
+                WriteDto w = new WriteDto();
+                w.setTitle(de.get().getTitle());
+                w.setBody(de.get().getBody());
+                w.setEmoji(de.get().getEmoji());
+                return ResponseEntity.status(200).body(w);
+            } else {
+                System.out.println("잘못된 접근");
+                return ResponseEntity.status(404).body("잘못된 접근");
+            }
+        } catch (Exception e){
+            System.out.println("데이터베이스 오류");
+            return ResponseEntity.status(400).body("데이터베이스 오류");
+        }
+    }
 }
