@@ -15,9 +15,9 @@ import client from '../../lib/api/client'; // 하드코딩
 export default function LoginForm() {
   const [form, setForm] = useRecoilState(loginState);
   const [auth, setAuth] = useRecoilState(authCheckState);
-  const [user, setUser] = useRecoilState(userState);
-  const [profile, setProfile] = useRecoilState(userImageState);
-  const [theme, setTheme] = useRecoilState(userThemeState);
+  const setUsers = useSetRecoilState(userState);
+  const setProfile = useSetRecoilState(userImageState);
+  const setTheme = useSetRecoilState(userThemeState);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
@@ -35,18 +35,21 @@ export default function LoginForm() {
           console.log('로그인 성공');
           setAuth({ check: true });
         }
+
+        if (response.status === 404) {
+          console.log('로그인 실패');
+          setAuth({ check: false });
+        }
       })
-      .catch((error) => console.log(error.response));
+      .catch((error) => {
+        console.log(error.response);
+        setAuth({ check: false });
+      });
   };
 
   const getUser = async (account) => {
     const user = await client.get(`/user/${account}`);
-
-    setUser({
-      account: account,
-    });
-    setProfile({ userImage: user.data.userImage });
-    setTheme({ userTheme: user.data.userTheme });
+    return user;
   };
 
   const onChange = (e) => {
@@ -63,31 +66,37 @@ export default function LoginForm() {
       setError(`아이디 또는 비밀번호를 모두 입력하세요.`);
       return;
     }
-    // const response = login({ account: form.account, password: form.password });
 
     await login({ account: form.account, password: form.password });
-
-    // if (response === false) {
-    //   setAuth({ check: false });
-    // } else if (response === true) {
-    //   setAuth({ check: true });
-    // }
   };
 
   // 나중에 useCallback이나 useEffect로 최적화
   useEffect(() => {
     if (auth.check === false) {
       console.log('로그인 실패');
+      setError('아이디 또는 비밀번호가 일치하지 않습니다.');
       return;
     }
     if (auth.check === true) {
       try {
         console.log('로그인 성공');
-        getUser(form.account);
-        console.log(form.account);
+        const userData = getUser(form.account);
+        const serverPath = client.defaults.baseURL;
+        const getData = () => {
+          userData.then((res) => {
+            setProfile({
+              userImage: `${serverPath}${res.data.userImage}`,
+            });
+            setTheme({ userTheme: res.data.userTheme });
+            localStorage.setItem('theme', res.data.userTheme);
+            localStorage.setItem('user-image', res.data.userImage);
+          });
+        };
+        getData();
+
+        setUsers({ account: form.account });
         localStorage.setItem('account', form.account);
-        localStorage.setItem('theme', theme.userTheme);
-        localStorage.setItem('user-image', profile.userImage);
+
         navigate(`/${form.account}`);
       } catch (e) {
         console.log(e);

@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-const client = axios.create();
-
-client.defaults.baseURL = 'http://117.110.137.172:8080';
+const client = axios.create({
+  baseURL: 'http://117.110.137.172:8080',
+});
 
 /*
     글로벌 설정 예시:

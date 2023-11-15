@@ -31,7 +31,7 @@ const ContentBlock = styled.div`
 
 export default function PasswordContainer() {
   const account = useRecoilValue(userAccount);
-  const [profile, setProfile] = useRecoilState(userImageState);
+  const setProfile = useSetRecoilState(userImageState);
   const userProfile = useRecoilValue(userImage);
   const [form, setForm] = useRecoilState(passwordState);
   const [error, setError] = useState('');
@@ -60,16 +60,9 @@ export default function PasswordContainer() {
     await client
       .post(`/user/upload/${account}.jpg`, formData)
       .then((res) => {
-        console.log(res);
         if (res.data) {
-          console.log(res.data);
-          const serverPath = client.defaults.baseURL;
-          const userPath = `${serverPath}${res.data.userImage}`;
-          console.log(userPath);
-          setTimeout(() => {
-            setProfile({ userImage: userPath });
-          }, 1000);
           alert(res.data.msg);
+          return res;
         } else {
           alert(res.data.msg);
         }
@@ -111,9 +104,18 @@ export default function PasswordContainer() {
     } else {
       const formData = new FormData();
       formData.append('image', file);
-      postUserImage(account, formData);
+      const serverPath = client.defaults.baseURL;
+      const promise = postUserImage(account, formData);
+      console.log(promise);
+      const getData = async () => {
+        await promise.then((res) => {
+          setProfile({ userImage: `${serverPath}${res.data.userImage}` });
+          localStorage.setItem('user-image', res.data.userImage);
+        });
+      };
+
+      getData();
       window.location.reload();
-      localStorage.setItem('user-image', profile);
     }
 
     try {
