@@ -46,8 +46,12 @@ export default function LoginForm() {
   };
 
   const getUser = async (account) => {
-    const user = await client.get(`/user/${account}`);
-    return user;
+    try {
+      const user = await client.get(`/user/${account}`);
+      return user;
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const onChange = (e) => {
@@ -97,7 +101,7 @@ export default function LoginForm() {
 
         setTimeout(() => {
           navigate(`/${form.account}`);
-          window.location.reload();
+          // window.location.reload();
         }, 100);
       } catch (e) {
         console.log(e);
