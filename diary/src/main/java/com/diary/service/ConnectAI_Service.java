@@ -9,6 +9,7 @@ import org.springframework.web.client.RestTemplate;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Base64;
 
 //ai로부터 이미지를 받아오고 저장합니다.
 
@@ -31,7 +32,7 @@ public class ConnectAI_Service {
         return restTemplate.postForObject(AI_Server_URL, requestEntity, String.class);
     }
 
-    public void saveImage(byte[] imageBytes, String imageName)
+    public void saveImage(String base64image, String imageName)
     {
         try{
             String folderPath = "file:"+backgroundPath;
@@ -42,7 +43,8 @@ public class ConnectAI_Service {
             if(!file.exists()){
                 file.createNewFile();
             }
-
+            //base64 디코딩
+            byte[] imageBytes = Base64.getDecoder().decode(base64image);
             //파일에 이미지데이터 쓰기
             try(FileOutputStream fos = new FileOutputStream(file)){
                 fos.write(imageBytes);
@@ -50,6 +52,7 @@ public class ConnectAI_Service {
         }catch(IOException e){
             e.printStackTrace();
             //파일 저장중 오류
+            System.out.println("저장오류");
         }
     }
 }

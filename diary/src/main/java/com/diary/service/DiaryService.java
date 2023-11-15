@@ -3,15 +3,14 @@ package com.diary.service;
 import com.diary.Entity.DiaryEntity;
 import com.diary.Repository.DiaryRepository;
 import com.diary.Repository.UserRepository;
-import com.diary.dto.DeleteDto;
-import com.diary.dto.RewriteDto;
-import com.diary.dto.WriteDto;
+import com.diary.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -99,6 +98,21 @@ public class DiaryService {
             return ResponseEntity.status(200).body("삭제 성공!");
         }catch(Exception e){
             System.out.println("데이터베이스 오류입니다. 데이터베이스 작동중지");
+            return ResponseEntity.status(400).body("데이터베이스 오류");
+        }
+    }
+
+    //유저의 글리스트 불러오기
+    public ResponseEntity<?> diaryList(DiaryListDto diaryListDto) {
+        try{
+            //글 불러오기
+            Optional<List<ReturnDiaryDto>> returnDiaryDtoOptional =
+                    diaryRepository.findReturnDiaryDtoByUsrIdAndCreatedAtYearAndCreatedAtMonthAndActivate(diaryListDto.getAccount(), diaryListDto.getX(), diaryListDto.getY(), 1);
+            List<ReturnDiaryDto> result = returnDiaryDtoOptional.get();
+            
+            return ResponseEntity.status(200).body(result);
+        }catch(Exception e){
+            System.out.println("데이터베이스 오류입니다. 데이터베이스가 꺼져잇나확인");
             return ResponseEntity.status(400).body("데이터베이스 오류");
         }
     }

@@ -1,6 +1,7 @@
 package com.diary.controller;
 
 import com.diary.dto.DeleteDto;
+import com.diary.dto.DiaryListDto;
 import com.diary.dto.RewriteDto;
 import com.diary.dto.WriteDto;
 import com.diary.service.DiaryService;
@@ -46,6 +47,14 @@ public class DiaryController {
     public ResponseEntity<?> delete(@RequestBody DeleteDto deleteDto) {
         System.out.println("글삭제: "+deleteDto.toString());
         ResponseEntity<?> result = diaryService.diaryDelete(deleteDto);
+        return result;
+    }
+
+    //글 보내주기
+    @PostMapping("/list")
+    public ResponseEntity<?> listedDiary(@RequestBody DiaryListDto diaryListDto) {
+        System.out.println("아이디, 년, 월 요청: "+ diaryListDto.toString());
+        ResponseEntity<?> result = diaryService.diaryList(diaryListDto);
         return result;
     }
 }
