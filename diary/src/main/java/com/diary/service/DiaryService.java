@@ -17,13 +17,16 @@ import java.util.Optional;
 public class DiaryService {
     private final DiaryRepository diaryRepository;
     private final UserRepository userRepository;
+    private final ConnectAI_Service connectAIService;
+    private final ImageService imageService;
 
     //회원 존재여부 검사도 하기위해서 userRepository를 가져옵니다.
     @Autowired
-    public DiaryService(DiaryRepository diaryRepository, UserRepository userRepository) {
-
+    public DiaryService(DiaryRepository diaryRepository, UserRepository userRepository, ConnectAI_Service connectAIService, ImageService imageService) {
         this.diaryRepository = diaryRepository;
         this.userRepository = userRepository;
+        this.connectAIService = connectAIService;
+        this.imageService = imageService;
     }
 
 
@@ -42,9 +45,29 @@ public class DiaryService {
         //유저가 존재한다면 글 쓴거 불러오기
         DiaryEntity de = new DiaryEntity(write);
         try{
-            diaryRepository.save(de);
-            //혹시라도 리턴할 뭔가 필요해진다면 DTO를 하나만들고 보내는게나음(msg, 필요한거)
+
+            //인공지능에 필요한거
+            String Url = "http://192.168.0.10:10011/compute";
+            String content = de.getBody();
+
+            //불러온거저장
+            DiaryEntity savedEntity = diaryRepository.save(de);
+
+            //id값을 다시 찾아와야함
+            Long generatedId = savedEntity.getId();
+            //인공지능 생기고 파일저장하게된다면
+            byte[] imageBytes = connectAIService.downloadImage(Url, content);
+            if(!imageService.saveImage(imageBytes, generatedId+".jpg")){
+                return ResponseEntity.status(400).body("저장 실패");
+            }
+            return ResponseEntity.status(200).body("/background/"+generatedId+".jpg");
+
+            /*
+            //인공지능X
+            DiaryEntity savedEntity = diaryRepository.save(de);
             return ResponseEntity.status(200).body("저장 성공!");
+             */
+
         }catch(Exception e){
             System.out.println("저장 오류");
             return ResponseEntity.status(400).body("저장 오류");
@@ -59,6 +82,7 @@ public class DiaryService {
         //유저 아이디와 글 아이디를통해 글이 존재하는지 확인해야함
         Long id = rewriteDto.getId();
         String account = rewriteDto.getAccount();
+        System.out.println("아이디, 계정: "+id + account);
         try {
             Optional<DiaryEntity> de = diaryRepository.findByIdAndUsrId(id, account);
             if(de.isEmpty()){
@@ -72,8 +96,25 @@ public class DiaryService {
             //시간은 + 9시간, 서버가 UTC라서, 환경변수 Asia/seoul해도 안되서 어쩔 수 없다
             rewriteDiary.setUpdatedAt(Timestamp.valueOf(LocalDateTime.now().plusHours(9)));
             //성공
+            System.out.println("담기는 되나?");
+            DiaryEntity diary = diaryRepository.save(rewriteDiary);
+            //인공지능o
+            String Url = "117.17.191.49:5000/compute";
+            String content = diary.getBody();
+            Long diaryId = diary.getId();
+            System.out.println(content+" "+ diaryId);
+            byte[] imageByt = connectAIService.downloadImage(Url, content);
+            if(!imageService.saveImage(imageByt, diaryId+".jpg")){
+                return ResponseEntity.status(400).body("저장 실패");
+            }
+            return ResponseEntity.status(200).body("/background/"+diaryId+".jpg");
+
+
+            /*
+            //인공지능X
             diaryRepository.save(rewriteDiary);
             return ResponseEntity.status(200).body("수정 성공!!");
+            */
         } catch(Exception e){
             System.out.println("글 찾던 중 데이터베이스 오류이거나 저장오류");
             return ResponseEntity.status(400).body("데이터 베이스 오류");

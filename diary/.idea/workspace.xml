@@ -81,6 +81,28 @@
     </key>
   </component>
   <component name="RunManager" selected="Spring Boot.DiaryApplication">
+    <configuration name="diary [dependencies]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="dependencies" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
     <configuration name="generated-requests | #1" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$APPLICATION_CONFIG_DIR$/scratches/generated-requests.http" requestIdentifier="#1" runType="Run single request">
       <method v="2" />
     </configuration>
@@ -94,6 +116,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.diary [dependencies]" />
         <item itemvalue="HTTP Request.generated-requests | #1" />
       </list>
     </recent_temporary>
@@ -148,6 +171,8 @@
       <workItem from="1700027353078" duration="11098000" />
       <workItem from="1700042489896" duration="6316000" />
       <workItem from="1700049787284" duration="3431000" />
+      <workItem from="1700107239482" duration="14014000" />
+      <workItem from="1700128894781" duration="11245000" />
     </task>
     <servers />
   </component>
