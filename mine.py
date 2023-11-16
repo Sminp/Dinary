@@ -1,7 +1,6 @@
 from flask import Flask,render_template
 import werkzeug.serving
 from flask import request,send_file,make_response
-import cv2 as cv
 from flask import jsonify
 from PIL import Image
 import io
