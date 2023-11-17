@@ -1,12 +1,6 @@
 import styled from 'styled-components';
 import palette from '../../lib/styles/palette';
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-balloon';
-
-const editorConfiguration = {
-  language: 'ko',
-  placeholder: '기억에 남는 일과 생각들을 기록해보세요!',
-};
+import TextareaAutosize from 'react-textarea-autosize';
 
 const Container = styled.div`
   width: 100%;
@@ -33,28 +27,39 @@ const TitleInput = styled.input`
   }
 `;
 
-const Editor = styled(CKEditor)`
-  width: 80px;
-  white-space: pre-wrap;
+const BodyInput = styled(TextareaAutosize)`
+  width: 100%;
+  padding: 12px;
+  outline: none;
+  border: none;
+  background: ${(props) => props.theme.writeContent};
+
+  font-size: 1.2rem;
+  font-weight: 600;
+  font-family: 'Noto Sans KR', sans-serif;
+  color: ${(props) => props.theme.subtext};
+
+  ::placeholder {
+    color: ${palette.gray[0]};
+  }
 `;
 
 export default function Edit({ onChangeField }) {
   return (
     <Container>
-      <form name="write">
+      <form name="write" method="POST">
         <TitleInput
           placeholder="제목을 입력해주세요"
           onChange={onChangeField}
           name="title"
         />
-        <Editor
-          editor={ClassicEditor}
-          config={editorConfiguration}
-          data=""
-          onChange={(event, editor) => {
-            const data = editor.getData();
-            onChangeField({ key: 'body', value: data });
-          }}
+        <BodyInput
+          placeholder="기억에 남는 일과 생각들을 기록해보세요!"
+          name="body"
+          minRows="7"
+          spellCheck="true"
+          onChange={onChangeField}
+          cacheMeasurements="true"
         />
       </form>
     </Container>

@@ -1,7 +1,9 @@
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Responsive from '../common/Responsive';
 import ToTop from '../common/ToTop';
 import Updates from './modal/Updates';
+import { emojiList } from '../../lib/styles/constants';
 
 const PostViewerBlock = styled(Responsive)`
   width: 100%;
@@ -73,6 +75,7 @@ const postInfo = {
 
 export default function PostViewer({ account, post, onEdit, onRemove }) {
   const { backgroundImage, bodyColor } = postInfo;
+  const [date, setDate] = useState('');
   window.scrollTo({ top: 0 });
 
   //error
@@ -89,7 +92,24 @@ export default function PostViewer({ account, post, onEdit, onRemove }) {
   //   return null;
   // }
 
-  const { id, title, body, emoji, summed, createdAt } = post;
+  const { id, title, body, emoji, createdAt } = post;
+
+  const emojiIndex = emojiList.findIndex((item) => item.emojiId === emoji);
+
+  useEffect(() => {
+    if (typeof createdAt === 'string') {
+      const year = createdAt.slice(0, 4);
+      const month = createdAt.slice(5, 7);
+      const day = createdAt.slice(8, 10);
+      setDate(`${year}년 ${month}월 ${day}일`);
+    } else {
+      const year = createdAt.getFullYear();
+      const month = createdAt.getMonth() + 1;
+      const day = createdAt.getDate();
+      setDate(`${year}년 ${month}월 ${day}일`);
+    }
+  }, []);
+
   return (
     <PostViewerBlock
       style={{
@@ -99,14 +119,11 @@ export default function PostViewer({ account, post, onEdit, onRemove }) {
       }}
     >
       <PostHead>
-        {console.log(post)}
         <div>
-          <div className="category">
-            {createdAt.getFullYear()}년 {createdAt.getMonth() + 1}월{' '}
-            {createdAt.getDate()}일
-          </div>
+          <div className="category">{date}</div>
           <div className="subtitles">
-            {account}님의 마음구슬은 <span>{emoji}</span>구슬이에요.
+            {account}님의 마음구슬은 <span>{emojiList[emojiIndex].name}</span>
+            이에요.
           </div>
         </div>
         <Updates onEdit={onEdit} onRemove={onRemove} />
@@ -118,7 +135,6 @@ export default function PostViewer({ account, post, onEdit, onRemove }) {
         >
           <span>{title}</span>
         </div>
-        {/* <PostContent dangerouslySetInnerHTML={{ __html: content }} /> */}
         <PostContent>{body}</PostContent>
       </Contents>
       <ToTop />
