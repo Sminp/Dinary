@@ -39,7 +39,7 @@ const HeaderBlock = styled.div`
 
 const LogoButton = styled(Button)`
   position: absolute;
-  left: 3rem;
+  left: 65px;
 
   div {
     width: 105.16px;
