@@ -7,7 +7,6 @@ import PostsAlign from '../../components/posts/PostsAlign';
 import MonthlyCalendar from '../../components/posts/MonthlyCalendar';
 import { postListState } from '../../State/postState';
 import { userAccount } from '../../State/userState';
-// import { listPosts } from '../../lib/api/posts';
 import client from '../../lib/api/client';
 
 const PostListBlock = styled(Responsive)`
@@ -23,46 +22,39 @@ export default function PostListContainer() {
   const account = useRecoilValue(userAccount);
   const [postList, setPostList] = useRecoilState(postListState);
   const [error, setError] = useState('');
-  // const [loading, setLoading] = useRecoilState(postState).loading;
+  // 로딩
 
-  const listPosts = ({ account }) => {
-    client
-      .get(`/diarys/${account}`)
-      .then((response) => {
-        console.log('200', response.data);
-
-        if (response.status === 200) {
-          console.log('글리스트 불러오기 성공');
-          setPostList({
-            ...postList,
-            totalPages: response.data.totalPages,
-            totalElements: response.data.totalElements,
-            currentPage: response.data.currentPage,
-            currentElements: response.data.currentElements,
-            postInfo: response.data,
-          });
-        }
-      })
-      .catch((error) => {
-        console.log(error.response);
-      });
+  const listPosts = ({ account, x: year, y: month }) => {
+    try {
+      const res = client.post('/diary/list', { account });
+      if (res.status === 200) {
+        console.log('글 불러오기 성공');
+        return res.data;
+      } else if (res.status === 400) {
+        console.log('데이터베이스 오류입니다.');
+        return res.data;
+      }
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   // 포스트 목록 불러오기
   useEffect(() => {
-    listPosts(account);
     try {
+      listPosts(account);
+      setError(null);
     } catch (e) {
       console.log(e);
       setError('포스트 목록을 불러오는데 실패했습니다.');
     }
   }, []);
 
-  // // 에러 발생 시
-  // if (error) {
-  //   console.log(error);
-  //   return <PostListBlock>에러가 발생했습니다.</PostListBlock>;
-  // }
+  // 에러 발생 시
+  if (error) {
+    console.log(error);
+    return <PostListBlock>에러가 발생했습니다.</PostListBlock>;
+  }
 
   return (
     <PostListBlock>

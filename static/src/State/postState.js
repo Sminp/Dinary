@@ -1,4 +1,10 @@
 import { atom, selector } from 'recoil';
+import { recoilPersist } from 'recoil-persist';
+
+const { persistAtom } = recoilPersist({
+  key: 'sessionStorage', // 고유한 key 값
+  storage: sessionStorage,
+});
 
 export const postListState = atom({
   key: 'postListState',
@@ -14,13 +20,13 @@ export const postListState = atom({
 export const postState = atom({
   key: 'postState',
   default: {
-    id: 0,
+    id: null,
     title: '',
     body: '',
     emoji: 'Happy',
-    summed: '',
-    createdAt: null,
+    createdAt: '',
   },
+  effects_UNSTABLE: [persistAtom],
 });
 
 export const postErrorState = atom({
