@@ -19,8 +19,7 @@ public class ConnectAI_Service {
     public byte[] downloadImage(String URL, String diary_content) throws IOException{
         System.out.println("곧 보냅니다");
         ResponseEntity<byte[]> responseEntity = restTemplate.postForEntity(URL, diary_content, byte[].class);
-        for(byte b: responseEntity.getBody())
-            System.out.print(b+" ");
+        System.out.println("받기 완료!");
         return responseEntity.getBody();
     }
 

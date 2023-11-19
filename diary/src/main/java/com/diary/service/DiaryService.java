@@ -56,10 +56,21 @@ public class DiaryService {
             //id값을 다시 찾아와야함
             Long generatedId = savedEntity.getId();
             //인공지능 생기고 파일저장하게된다면
-            byte[] imageBytes = connectAIService.downloadImage(Url, content);
-            if(!imageService.saveImage(imageBytes, generatedId+".jpg")){
-                return ResponseEntity.status(400).body("저장 실패");
+            try{
+                byte[] imageBytes = connectAIService.downloadImage(Url, content);
+                if(!imageService.saveImage(imageBytes, generatedId+".jpg")){
+                    //사진 불러오기에 실패했으니 글을 삭제한다.
+                    savedEntity.setActivate(0);
+                    diaryRepository.save(savedEntity);
+                    return ResponseEntity.status(400).body("저장 실패");
+                }
+            }catch(Exception e){
+                //사진 불러오기에 실패했으니 글을 삭제한다.
+                savedEntity.setActivate(0);
+                diaryRepository.save(savedEntity);
+                return ResponseEntity.status(400).body("사진 불러오기 오류");
             }
+
             return ResponseEntity.status(200).body("/background/"+generatedId+".jpg");
 
             /*
@@ -92,14 +103,14 @@ public class DiaryService {
             DiaryEntity rewriteDiary = de.get();
             rewriteDiary.setTitle(rewriteDto.getTitle());
             rewriteDiary.setBody(rewriteDto.getBody());
-            rewriteDiary.setEmoji(rewriteDiary.getEmoji());
+            rewriteDiary.setEmoji(rewriteDto.getEmoji());
             //시간은 + 9시간, 서버가 UTC라서, 환경변수 Asia/seoul해도 안되서 어쩔 수 없다
             rewriteDiary.setUpdatedAt(Timestamp.valueOf(LocalDateTime.now().plusHours(9)));
             //성공
             System.out.println("담기는 되나?");
             DiaryEntity diary = diaryRepository.save(rewriteDiary);
             //인공지능o
-            String Url = "117.17.191.49:5000/compute";
+            String Url = "http://192.168.0.10:10011/compute";
             String content = diary.getBody();
             Long diaryId = diary.getId();
             System.out.println(content+" "+ diaryId);
@@ -148,7 +159,7 @@ public class DiaryService {
         try{
             //글 불러오기
             Optional<List<ReturnDiaryDto>> returnDiaryDtoOptional =
-                    diaryRepository.findReturnDiaryDtoByUsrIdAndCreatedAtYearAndCreatedAtMonthAndActivate(diaryListDto.getAccount(), diaryListDto.getX(), diaryListDto.getY(), 1);
+                    diaryRepository.findReturnDiaryDtoByUsrIdAndCreatedAtYearAndActivate(diaryListDto.getAccount(), diaryListDto.getX(), 1);
             List<ReturnDiaryDto> result = returnDiaryDtoOptional.get();
             
             return ResponseEntity.status(200).body(result);
@@ -164,10 +175,12 @@ public class DiaryService {
         try{
             Optional<DiaryEntity> de = diaryRepository.findByIdAndUsrId(id, account);
             if(de.isPresent()){
-                WriteDto w = new WriteDto();
+                LoadDiaryDto w = new LoadDiaryDto();
                 w.setTitle(de.get().getTitle());
                 w.setBody(de.get().getBody());
                 w.setEmoji(de.get().getEmoji());
+                w.setUpdatedAt(de.get().getUpdatedAt().toLocalDateTime().toString());
+                System.out.println("이거는 보내는 원소: "+w.toString());
                 return ResponseEntity.status(200).body(w);
             } else {
                 System.out.println("잘못된 접근");
@@ -176,6 +189,22 @@ public class DiaryService {
         } catch (Exception e){
             System.out.println("데이터베이스 오류");
             return ResponseEntity.status(400).body("데이터베이스 오류");
+        }
+    }
+
+
+    //유저의 일기 5개 불러주기(최신)
+    public ResponseEntity<?> diaryListFive(String account) {
+        try{
+            Optional<List<ReturnFiveDto>> od = diaryRepository.findTop5ReturnFiveDtoByUsrIdAndActivateOrderByCreatedAtDesc(account, 1);
+            if(od.isEmpty())
+                System.out.println("리스트가 비어있음");
+            System.out.println(od.toString());
+            List<ReturnFiveDto> list = od.get();
+            return ResponseEntity.status(200).body(list);
+        } catch (Exception e) {
+            System.out.println("데이터베이스 오류");
+            return ResponseEntity.status(400).body("데이터베이스 오류입니다.");
         }
     }
 }

@@ -11,5 +11,4 @@ import lombok.NoArgsConstructor;
 public class DiaryListDto {
     private String account;
     private int x; //년도
-    private int y; //월
 }

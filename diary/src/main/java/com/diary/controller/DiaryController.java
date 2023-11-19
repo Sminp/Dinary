@@ -40,7 +40,7 @@ public class DiaryController {
     }
 
     //글 삭제하기
-    @PostMapping("delete")
+    @PostMapping("/delete")
     public ResponseEntity<?> delete(@RequestBody DeleteDto deleteDto) {
         System.out.println("글삭제: "+deleteDto.toString());
         ResponseEntity<?> result = diaryService.diaryDelete(deleteDto);
@@ -60,6 +60,14 @@ public class DiaryController {
     public ResponseEntity<?> loadDiary(@RequestBody LoadDto loadDto){
         System.out.println("글id, 어카운트 요청: "+loadDto.toString());
         ResponseEntity<?> result = diaryService.diaryLoad(loadDto.getId(), loadDto.getAccount());
+        return result;
+    }
+
+    //글 5개 보내주기
+    @PostMapping("/myload")
+    public ResponseEntity<?> listedFiveDiary(@RequestBody AccountDto account) {
+        System.out.println("어카운트: "+account.toString());
+        ResponseEntity<?> result = diaryService.diaryListFive(account.getAccount());
         return result;
     }
 }
