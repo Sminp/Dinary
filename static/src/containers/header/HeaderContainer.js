@@ -7,7 +7,6 @@ import {
   userState,
   userThemeState,
 } from '../../State/userState';
-import { logout } from '../../lib/api/auth';
 import Header from '../../components/common/header/Header';
 import { authCheckState } from '../../State/authState';
 import { postState } from '../../State/postState';
@@ -33,9 +32,9 @@ export default function HeaderContainer() {
     localStorage.removeItem('account');
     localStorage.removeItem('theme');
     localStorage.removeItem('user-image');
-    logout();
     navigate('/');
     window.location.reload();
+    // 버그 바로 안지워짐
   };
 
   const handlePost = () => {
