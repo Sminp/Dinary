@@ -163,7 +163,7 @@ export function AskModal({
 
 export default function ImageModal({ onPublish, onChange, tempEmoji }) {
   const [open, setOpen] = useState(true);
-  const theme = ['Love', 'PokerFace', 'Fear'];
+  const theme = ['Love']; // 임시
 
   const onConfirm = () => {
     setOpen(false);
