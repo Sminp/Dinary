@@ -51,10 +51,10 @@ export default function PostsAlign({ account, posts }) {
       </div>
       <PostListBlock>
         <p>내 일기</p>
-        {!!posts
+        {Array.isArray(posts) === false
           ? ''
           : posts.map((info) => (
-              <PostItem key={info.id} post={info.day} account={account} />
+              <PostItem key={info.id} post={info} account={account} />
             ))}
       </PostListBlock>
     </Wrapper>

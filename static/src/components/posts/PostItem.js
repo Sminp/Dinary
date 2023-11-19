@@ -48,16 +48,18 @@ const PostContentBlock = styled.div`
 `;
 
 export default function PostItem({ account, post }) {
-  const { title, body, createAt } = post;
-
+  const { title, body, createdAt, id } = post;
   return (
     <PostItemBlock>
       <PostContentBlock>
         <div className="title">
-          <Link to={`/${account}/${post.id}`}>
+          <Link to={`/${account}/${id}`}>
             <span>{title}</span>
           </Link>
-          {createAt}
+          {`${createdAt.slice(0, 4)}년 ${createdAt.slice(
+            5,
+            7,
+          )}월 ${createdAt.slice(8, 10)}일`}
         </div>
         {body}
       </PostContentBlock>

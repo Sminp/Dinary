@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import Responsive from '../../components/common/Responsive';
 import PostsAlign from '../../components/posts/PostsAlign';
 import MonthlyCalendar from '../../components/posts/MonthlyCalendar';
-import { postListState } from '../../State/postState';
+import { postListState, post5Lists } from '../../State/postState';
 import { userAccount } from '../../State/userState';
 import client from '../../lib/api/client';
 
@@ -20,15 +20,16 @@ const PostListBlock = styled(Responsive)`
 export default function PostListContainer() {
   const account = useRecoilValue(userAccount);
   const [postList, setPostList] = useRecoilState(postListState);
+  const setPost5List = useSetRecoilState(post5Lists);
   const [error, setError] = useState('');
   const today = new Date();
-  const year = today.getFullYear();
-  const month = today.getMonth() + 1;
+  const todayYear = String(today.getFullYear());
+  const [year, setYear] = useState('');
   // 로딩
 
-  const listPosts = async ({ account, x, y }) => {
+  const listPosts = async ({ account, x }) => {
     try {
-      const res = await client.post('/diary/list', { account, x, y });
+      const res = await client.post('/diary/list', { account, x });
       if (res.status === 200) {
         console.log('글 불러오기 성공');
         return res.data;
@@ -41,11 +42,36 @@ export default function PostListContainer() {
     }
   };
 
+  const list5posts = async ({ account }) => {
+    try {
+      const res = await client.post('/diary/myload', { account });
+      if (res.status === 200) {
+        console.log('글 불러오기 성공');
+        return res.data;
+      } else if (res.status === 400) {
+        console.log('데이터베이스 오류입니다.');
+        return res.data;
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const handleYear = (e) => {
+    console.log(e);
+    setYear(e);
+  };
+
+  useEffect(() => {
+    setYear(todayYear);
+  }, []);
+
   // 포스트 목록 불러오기
   useEffect(() => {
     try {
-      const promise = listPosts({ account: account, x: year, y: month });
-      console.log(promise);
+      console.log(year);
+      const promise = listPosts({ account: account, x: year });
+      console.log('글 목록', promise);
       const getData = () => {
         promise.then((res) => {
           setPostList({ postList: res });
@@ -59,6 +85,22 @@ export default function PostListContainer() {
       console.log(e);
       setError('포스트 목록을 불러오는데 실패했습니다.');
     }
+  }, [year]);
+
+  useEffect(() => {
+    try {
+      const promise = list5posts({ account: account });
+      console.log(promise);
+      const getData = () => {
+        promise.then((res) => {
+          setPost5List({ post5Lists: res });
+        });
+      };
+
+      getData();
+    } catch (e) {
+      console.log(e);
+    }
   }, []);
 
   // 에러 발생 시
@@ -69,8 +111,12 @@ export default function PostListContainer() {
 
   return (
     <PostListBlock>
-      <MonthlyCalendar account={account} posts={postList.postList} />
-      <PostsAlign account={account} posts={postList.postList} />
+      <MonthlyCalendar
+        account={account}
+        posts={postList.postList}
+        year={handleYear}
+      />
+      <PostsAlign account={account} posts={post5Lists.post5Lists} />
     </PostListBlock>
   );
 }

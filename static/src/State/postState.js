@@ -14,6 +14,14 @@ export const postListState = atom({
   effects_UNSTABLE: [persistAtom],
 });
 
+export const post5Lists = atom({
+  key: 'post5Lists',
+  default: {
+    post5Lists: [],
+  },
+  effects_UNSTABLE: [persistAtom],
+});
+
 export const postState = atom({
   key: 'postState',
   default: {
