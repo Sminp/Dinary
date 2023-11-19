@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Responsive from '../common/Responsive';
 import ToTop from '../common/ToTop';
@@ -69,7 +68,6 @@ const PostContent = styled.div`
 `;
 
 export default function PostViewer({ account, post, onEdit, onRemove }) {
-  const [date, setDate] = useState('');
   window.scrollTo({ top: 0 });
 
   //error
@@ -90,13 +88,6 @@ export default function PostViewer({ account, post, onEdit, onRemove }) {
 
   const emojiIndex = emojiList.findIndex((item) => item.emojiId === emoji);
 
-  useEffect(() => {
-    const year = updatedAt.slice(0, 4);
-    const month = updatedAt.slice(5, 7);
-    const day = Number(updatedAt.slice(8, 10)) - 1;
-    setDate(`${year}년 ${month}월 ${day}일`);
-  }, []);
-
   return (
     <PostViewerBlock
       style={{
@@ -107,7 +98,10 @@ export default function PostViewer({ account, post, onEdit, onRemove }) {
     >
       <PostHead>
         <div>
-          <div className="category">{date}</div>
+          <div className="category">{`${updatedAt.slice(
+            0,
+            4,
+          )}년 ${updatedAt.slice(5, 7)}월 ${updatedAt.slice(8, 10)}일`}</div>
           <div className="subtitles">
             {account}님의 마음구슬은 <span>{emojiList[emojiIndex].name}</span>
             이에요.
