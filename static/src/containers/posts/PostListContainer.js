@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import Responsive from '../../components/common/Responsive';
 import PostsAlign from '../../components/posts/PostsAlign';
 import MonthlyCalendar from '../../components/posts/MonthlyCalendar';
@@ -20,7 +20,7 @@ const PostListBlock = styled(Responsive)`
 export default function PostListContainer() {
   const account = useRecoilValue(userAccount);
   const [postList, setPostList] = useRecoilState(postListState);
-  const setPost5List = useSetRecoilState(post5Lists);
+  const [post5List, setPost5List] = useRecoilState(post5Lists);
   const [error, setError] = useState('');
   const today = new Date();
   const todayYear = String(today.getFullYear());
@@ -69,7 +69,6 @@ export default function PostListContainer() {
   // 포스트 목록 불러오기
   useEffect(() => {
     try {
-      console.log(year);
       const promise = listPosts({ account: account, x: year });
       console.log('글 목록', promise);
       const getData = () => {
@@ -90,14 +89,16 @@ export default function PostListContainer() {
   useEffect(() => {
     try {
       const promise = list5posts({ account: account });
-      console.log(promise);
+      console.log('최신 글 5개', promise);
       const getData = () => {
         promise.then((res) => {
+          console.log('5', res);
           setPost5List({ post5Lists: res });
         });
       };
 
       getData();
+      console.log(post5List.post5Lists);
     } catch (e) {
       console.log(e);
     }
@@ -116,7 +117,7 @@ export default function PostListContainer() {
         posts={postList.postList}
         year={handleYear}
       />
-      <PostsAlign account={account} posts={post5Lists.post5Lists} />
+      <PostsAlign account={account} posts={post5List.post5Lists} />
     </PostListBlock>
   );
 }
