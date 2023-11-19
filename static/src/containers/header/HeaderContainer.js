@@ -10,6 +10,7 @@ import {
 import { logout } from '../../lib/api/auth';
 import Header from '../../components/common/header/Header';
 import { authCheckState } from '../../State/authState';
+import { postState } from '../../State/postState';
 
 export default function HeaderContainer() {
   const account = useRecoilValue(userAccount);
@@ -17,6 +18,7 @@ export default function HeaderContainer() {
   const resetUser = useResetRecoilState(userState);
   const resetProfile = useResetRecoilState(userImageState);
   const resetTheme = useResetRecoilState(userThemeState);
+  const resetPost = useResetRecoilState(postState);
   const resetAuth = useResetRecoilState(authCheckState);
 
   const navigate = useNavigate();
@@ -27,6 +29,7 @@ export default function HeaderContainer() {
     resetProfile();
     resetTheme();
     resetAuth();
+    resetPost();
     localStorage.removeItem('account');
     localStorage.removeItem('theme');
     localStorage.removeItem('user-image');
@@ -35,7 +38,16 @@ export default function HeaderContainer() {
     window.location.reload();
   };
 
+  const handlePost = () => {
+    resetPost();
+  };
+
   return (
-    <Header account={account} userImage={userProfile} onLogout={handleLogout} />
+    <Header
+      account={account}
+      userImage={userProfile}
+      onLogout={handleLogout}
+      onUnload={handlePost}
+    />
   );
 }

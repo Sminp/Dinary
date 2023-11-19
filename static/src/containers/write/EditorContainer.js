@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilState, useResetRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import WriteForm from '../../components/write/WriteForm';
 import { postState, postErrorState } from '../../State/postState';
 import { userAccount } from '../../State/userState';
@@ -10,9 +10,7 @@ export default function EditorContainer() {
   const account = useRecoilValue(userAccount);
   const [write, setWrite] = useRecoilState(postState);
   const [post, setPost] = useRecoilState(postErrorState);
-  const reset = useResetRecoilState(postState);
 
-  const { id, title, body, emoji, createdAt } = write;
   const navigate = useNavigate();
 
   const writePost = async ({ title, body, emoji, account }) => {
@@ -28,6 +26,7 @@ export default function EditorContainer() {
         return res.data;
       } else if (res.status === 400) {
         console.log('데이터베이스 오류입니다.');
+        alert('다시 시도해주세요.');
         return res.data;
       } else if (res.status === 404) {
         console.log('없는 계정입니다.');
@@ -48,10 +47,11 @@ export default function EditorContainer() {
         id,
       });
       if (res.status === 200) {
-        console.log('글 수정 성공');
+        console.log('글 수정 성공!');
         return res.data;
       } else if (res.status === 400) {
         console.log('데이터베이스 오류입니다.');
+        alert('다시 시도해주세요.');
         return res.data;
       } else if (res.status === 404) {
         console.log('없는 계정입니다.');
@@ -80,18 +80,24 @@ export default function EditorContainer() {
   // 포스트 등록
   const onPublish = () => {
     try {
-      if (id) {
-        updatePost({ title, body, emoji, account, id });
+      if (write.id) {
+        updatePost({
+          title: write.title,
+          body: write.body,
+          emoji: write.emoji,
+          account: account,
+          id: write.id,
+        });
       } else {
         setWrite({
           ...write,
           createdAt: new Date(),
         });
         writePost({
-          title,
-          body,
-          emoji,
-          account,
+          title: write.title,
+          body: write.body,
+          emoji: write.emoji,
+          account: account,
         });
       }
       return setPost({ error: false });
@@ -113,7 +119,8 @@ export default function EditorContainer() {
     } else if (post.error === false) {
       console.log('성공');
 
-      navigate(`/${account}/${id}`);
+      navigate(`/${account}/${write.id}`);
+      window.location.reload();
       // reset();
     }
     setPost({ error: null });
@@ -121,10 +128,11 @@ export default function EditorContainer() {
 
   return (
     <WriteForm
+      post={write}
       onChangeField={onChangeField}
       onPublish={onPublish}
       onCancel={onCancel}
-      tempEmoji={emoji}
+      tempEmoji={write.emoji}
     />
   );
 }

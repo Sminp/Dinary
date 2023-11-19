@@ -1,4 +1,4 @@
-import { atom, selector } from 'recoil';
+import { atom } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
 
 const { persistAtom } = recoilPersist({
@@ -9,12 +9,9 @@ const { persistAtom } = recoilPersist({
 export const postListState = atom({
   key: 'postListState',
   default: {
-    totalPages: 0,
-    totalElements: 0,
-    currentPage: 0,
-    currentElements: 0,
-    postInfo: null,
+    postList: [],
   },
+  effects_UNSTABLE: [persistAtom],
 });
 
 export const postState = atom({
@@ -24,7 +21,8 @@ export const postState = atom({
     title: '',
     body: '',
     emoji: 'Happy',
-    createdAt: '',
+    updatedAt: '',
+    backgroundImage: '',
   },
   effects_UNSTABLE: [persistAtom],
 });

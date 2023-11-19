@@ -1,12 +1,19 @@
 import { atom, selector, RecoilEnv } from 'recoil';
+import { recoilPersist } from 'recoil-persist';
 
 RecoilEnv.RECOIL_DUPLICATE_ATOM_KEY_CHECKING_ENABLED = false;
+
+const { persistAtom } = recoilPersist({
+  key: 'localStorage', // 고유한 key 값
+  storage: localStorage,
+});
 
 export const userState = atom({
   key: 'userState',
   default: {
     account: 'account',
   },
+  effects_UNSTABLE: [persistAtom],
 });
 
 export const userThemeState = atom({
@@ -14,28 +21,15 @@ export const userThemeState = atom({
   default: {
     userTheme: 'basicTheme',
   },
+  effects_UNSTABLE: [persistAtom],
 });
 
 export const userImageState = atom({
   key: 'userImageState',
   default: {
-    userImage: '/images/User/Profile.svg',
+    userImage: `${process.env.PUBLIC_URL}/images/User/Profile.svg`,
   },
-});
-
-export const getUserState = selector({
-  key: 'getUserState',
-  get: async ({ get }) => {
-    // const account = userAccount;
-    // const userImage = userImageState;
-    // const userTheme = userThemeState;
-
-    const account = localStorage.getItem('account');
-    const userImage = localStorage.getItem('user-image');
-    const userTheme = localStorage.getItem('theme');
-
-    return { account, userTheme, userImage };
-  },
+  effects_UNSTABLE: [persistAtom],
 });
 
 export const userAccount = selector({
@@ -66,7 +60,6 @@ export const userImage = selector({
   key: 'userImage',
   get: ({ get }) => {
     const userImage = localStorage.getItem('user-image');
-    console.log(userImage);
     if (!userImage) {
       const image = get(userImageState);
       return image.userImage;

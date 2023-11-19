@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import Responsive from '../../components/common/Responsive';
@@ -22,11 +21,14 @@ export default function PostListContainer() {
   const account = useRecoilValue(userAccount);
   const [postList, setPostList] = useRecoilState(postListState);
   const [error, setError] = useState('');
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = today.getMonth() + 1;
   // 로딩
 
-  const listPosts = ({ account, x: year, y: month }) => {
+  const listPosts = async ({ account, x, y }) => {
     try {
-      const res = client.post('/diary/list', { account });
+      const res = await client.post('/diary/list', { account, x, y });
       if (res.status === 200) {
         console.log('글 불러오기 성공');
         return res.data;
@@ -42,7 +44,16 @@ export default function PostListContainer() {
   // 포스트 목록 불러오기
   useEffect(() => {
     try {
-      listPosts(account);
+      const promise = listPosts({ account: account, x: year, y: month });
+      console.log(promise);
+      const getData = () => {
+        promise.then((res) => {
+          setPostList({ postList: res });
+        });
+      };
+
+      getData();
+      console.log(postList.postList);
       setError(null);
     } catch (e) {
       console.log(e);
@@ -58,8 +69,8 @@ export default function PostListContainer() {
 
   return (
     <PostListBlock>
-      <MonthlyCalendar account={account} posts={postList} />
-      <PostsAlign account={account} posts={postList} />
+      <MonthlyCalendar account={account} posts={postList.postList} />
+      <PostsAlign account={account} posts={postList.postList} />
     </PostListBlock>
   );
 }
