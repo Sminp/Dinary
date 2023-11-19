@@ -18,7 +18,7 @@ const StyledButton = styled(Button)`
   div {
     width: 100%;
     height: 100%;
-    background-image: url('/images/Post/Updates.svg');
+    background-image: url(${process.env.PUBLIC_URL}/images/Post/Updates.svg);
     background-size: cover;
   }
 `;

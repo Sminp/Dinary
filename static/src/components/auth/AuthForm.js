@@ -129,7 +129,14 @@ export default function AuthForm({ type, form, onChange, onSubmit, error }) {
             defaultValue={form.account}
             onFocus={() => setSelect('account')}
           />
-          {select === 'login' ? <img src="/images/Login/Eye.svg" alt="" /> : ''}
+          {select === 'login' ? (
+            <img
+              src={`${process.env.PUBLIC_URL}/images/Login/Eye.svg`}
+              alt=""
+            />
+          ) : (
+            ''
+          )}
         </InputDiv>
 
         <InputDiv $select={select === 'password' ? true : false}>
@@ -143,7 +150,10 @@ export default function AuthForm({ type, form, onChange, onSubmit, error }) {
             onFocus={() => setSelect('password')}
           />
           {select === 'password' ? (
-            <img src="/images/Login/Eye.svg" alt="" />
+            <img
+              src={`${process.env.PUBLIC_URL}/images/Login/Eye.svg`}
+              alt=""
+            />
           ) : (
             ''
           )}
@@ -160,7 +170,10 @@ export default function AuthForm({ type, form, onChange, onSubmit, error }) {
               onFocus={() => setSelect('passwordConfirm')}
             />
             {select === 'passwordConfirm' ? (
-              <img src="/images/Login/Eye.svg" alt="" />
+              <img
+                src={`${process.env.PUBLIC_URL}/images/Login/Eye.svg`}
+                alt=""
+              />
             ) : (
               ''
             )}

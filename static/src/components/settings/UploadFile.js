@@ -61,7 +61,10 @@ export default function UploadFile({ profile, onUpload }) {
       <ProfileImage src={userImage} alt="" />
       <input type="file" accept="image/*" ref={inputRef} onChange={onUpload} />
       <FileBlock onClick={onUploadImageButtonClick}>
-        <img src="/images/User/Edit.svg" alt="edit" />
+        <img
+          src={`${process.env.PUBLIC_URL}/images/User/Edit.svg`}
+          alt="edit"
+        />
       </FileBlock>
       <span>{account}</span>
     </Wrapper>

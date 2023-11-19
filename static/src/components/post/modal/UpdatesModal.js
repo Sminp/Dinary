@@ -8,7 +8,7 @@ const Content = styled.div`
   width: 150px;
   height: 160px;
   padding: 25px 5px;
-  background-image: url('/images/Post/UpdatesBox.svg');
+  background-image: url(${process.env.PUBLIC_URL}/images/Post/UpdatesBox.svg);
   background-size: cover;
   filter: drop-shadow(0px 86px 24px rgba(0, 0, 0, 0))
     drop-shadow(0px 55px 22px rgba(0, 0, 0, 0.01))

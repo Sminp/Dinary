@@ -65,14 +65,16 @@ export default function Theme({ tempTheme, onClick, handleCheck }) {
             <div key={theme}>
               {check === theme ? (
                 <img
-                  src="/images/User/Check.svg"
+                  src={`${process.env.PUBLIC_URL}/images/User/Check.svg`}
                   alt="check"
                   className="check"
                 />
               ) : null}
               <img
                 name={theme}
-                src={`/images/Background/Login${index + 1}.png`}
+                src={`${process.env.PUBLIC_URL}/images/Background/Login${
+                  index + 1
+                }.png`}
                 alt="theme"
                 tabIndex="0"
                 onFocus={handleCheck}

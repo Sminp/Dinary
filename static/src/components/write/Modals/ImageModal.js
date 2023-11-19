@@ -105,7 +105,7 @@ const AskModalBlock = styled.div`
 const XButton = styled(Button)`
   width: 15px;
   height: 15px;
-  background-image: url(/images/Write/XButton.svg);
+  background-image: url(${process.env.PUBLIC_URL}/images/Write/XButton.svg);
   background-size: cover;
 `;
 
@@ -140,7 +140,7 @@ export function AskModal({
                 <button
                   key={theme}
                   style={{
-                    backgroundImage: 'url(/images/User/Profile.svg)',
+                    backgroundImage: `url(${process.env.PUBLIC_URL}/images/User/Profile.svg)`,
                     backgroundSize: 'cover',
                     width: '125px',
                     height: '125px',
