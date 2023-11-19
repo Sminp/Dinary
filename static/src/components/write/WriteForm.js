@@ -42,7 +42,12 @@ const WriteBlock = styled(Responsive)`
   }
 `;
 
-export default function WriteForm({ onChangeField, onPublish, tempEmoji }) {
+export default function WriteForm({
+  post,
+  onChangeField,
+  onPublish,
+  tempEmoji,
+}) {
   return (
     <WriteBlock>
       <div className="explain-bar">
@@ -59,7 +64,7 @@ export default function WriteForm({ onChangeField, onPublish, tempEmoji }) {
           tempEmoji={tempEmoji}
         />
       </div>
-      <Edit onChangeField={onChangeField} />
+      <Edit onChangeField={onChangeField} post={post} />
       <ToTop />
     </WriteBlock>
   );

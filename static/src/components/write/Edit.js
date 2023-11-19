@@ -44,7 +44,7 @@ const BodyInput = styled(TextareaAutosize)`
   }
 `;
 
-export default function Edit({ onChangeField }) {
+export default function Edit({ post, onChangeField }) {
   return (
     <Container>
       <form name="write" method="POST">
@@ -52,6 +52,7 @@ export default function Edit({ onChangeField }) {
           placeholder="제목을 입력해주세요"
           onChange={onChangeField}
           name="title"
+          defaultValue={post.id ? post.title : ''}
         />
         <BodyInput
           placeholder="기억에 남는 일과 생각들을 기록해보세요!"
@@ -60,6 +61,7 @@ export default function Edit({ onChangeField }) {
           spellCheck="true"
           onChange={onChangeField}
           cacheMeasurements="true"
+          defaultValue={post.id ? post.body : ''}
         />
       </form>
     </Container>

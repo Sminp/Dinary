@@ -49,7 +49,7 @@ const LogoButton = styled(Button)`
   }
 `;
 
-export default function Header({ account, userImage, onLogout }) {
+export default function Header({ account, userImage, onLogout, onUnload }) {
   const [scroll, setScroll] = useState(false);
 
   // 좀 더 효율적인 방법 없을까??? 수정
@@ -71,7 +71,7 @@ export default function Header({ account, userImage, onLogout }) {
   return (
     <Wrapper $scroll={scroll}>
       <HeaderBlock>
-        <LogoButton to={`/${account}`}>
+        <LogoButton to={`/${account}`} onClick={onUnload}>
           <div />
         </LogoButton>
         <UserInfo account={account} userImage={userImage} onLogout={onLogout} />

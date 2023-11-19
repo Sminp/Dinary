@@ -4,6 +4,7 @@ import palette from '../../lib/styles/palette';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import EmojiExplain from './modal/EmojiExplain';
+import moment from 'moment';
 
 const MonthlyCalendarBlock = styled.div`
   margin: 0 10px;
@@ -177,19 +178,16 @@ const EmojiBlock = styled(Link)`
 
 export default function MonthlyCalendar({ account, posts }) {
   const addContent = ({ date }) => {
-    const day = String(Number(date.toISOString().slice(8, 10)) + 1);
-    if (!posts) {
-      const emoji = posts.map((post) => {
-        if (
-          post.createdAt.slice(0, 7) === date.toISOString().slice(0, 7) &&
-          post.createdAt.slice(8, 10) === day
-        ) {
+    const day = parseInt(moment(date).format('DD'));
+    if (posts) {
+      const emoji = posts.map((idx) => {
+        if (idx.day === day) {
           return (
             <EmojiBlock
-              key={post.id}
-              to={`/${account}/${post.id}`}
+              key={idx.id}
+              to={`/${account}/${idx.id}`}
               style={{
-                backgroundImage: `url('/images/Emoji/${post.emoji}.svg')`,
+                backgroundImage: `url(${process.env.PUBLIC_URL}/images/Emoji/${idx.emoji}.svg)`,
                 backgroundSize: 'cover',
               }}
             />
@@ -214,6 +212,7 @@ export default function MonthlyCalendar({ account, posts }) {
           tileContent={addContent}
           prev2Label={null}
           next2Label={null}
+          formatDay={(locale, date) => moment(date).format('D')}
         />
       </CalendarBlock>
     </MonthlyCalendarBlock>

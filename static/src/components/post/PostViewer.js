@@ -68,13 +68,7 @@ const PostContent = styled.div`
   // font-size: 1.3125rem;
 `;
 
-const postInfo = {
-  backgroundImage: '/images/Background/Login2.png',
-  bodyColor: '#F2F2F2',
-};
-
 export default function PostViewer({ account, post, onEdit, onRemove }) {
-  const { backgroundImage, bodyColor } = postInfo;
   const [date, setDate] = useState('');
   window.scrollTo({ top: 0 });
 
@@ -92,22 +86,15 @@ export default function PostViewer({ account, post, onEdit, onRemove }) {
   //   return null;
   // }
 
-  const { id, title, body, emoji, createdAt } = post;
+  const { id, title, body, emoji, updatedAt, backgroundImage } = post;
 
   const emojiIndex = emojiList.findIndex((item) => item.emojiId === emoji);
 
   useEffect(() => {
-    if (typeof createdAt === 'string') {
-      const year = createdAt.slice(0, 4);
-      const month = createdAt.slice(5, 7);
-      const day = createdAt.slice(8, 10);
-      setDate(`${year}년 ${month}월 ${day}일`);
-    } else {
-      const year = createdAt.getFullYear();
-      const month = createdAt.getMonth() + 1;
-      const day = createdAt.getDate();
-      setDate(`${year}년 ${month}월 ${day}일`);
-    }
+    const year = updatedAt.slice(0, 4);
+    const month = updatedAt.slice(5, 7);
+    const day = Number(updatedAt.slice(8, 10)) - 1;
+    setDate(`${year}년 ${month}월 ${day}일`);
   }, []);
 
   return (
@@ -129,10 +116,8 @@ export default function PostViewer({ account, post, onEdit, onRemove }) {
         <Updates onEdit={onEdit} onRemove={onRemove} />
       </PostHead>
       <Contents>
-        <div
-          className="title"
-          style={{ borderBottom: `2px solid ${bodyColor}` }}
-        >
+        <div className="title" style={{ borderBottom: `2px solid #353535` }}>
+          {/* 임시 컬러 */}
           <span>{title}</span>
         </div>
         <PostContent>{body}</PostContent>

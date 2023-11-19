@@ -54,7 +54,7 @@ export default function PostsAlign({ account, posts }) {
         {!!posts
           ? ''
           : posts.map((info) => (
-              <PostItem key={info.post.id} post={info.post} account={account} />
+              <PostItem key={info.id} post={info.day} account={account} />
             ))}
       </PostListBlock>
     </Wrapper>
