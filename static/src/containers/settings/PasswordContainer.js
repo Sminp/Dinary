@@ -109,14 +109,13 @@ export default function PasswordContainer() {
         promise.then((res) => {
           console.log(`${serverPath}${res.data.userImage}`);
           setProfile({ userImage: `${serverPath}${res.data.userImage}` });
-          localStorage.setItem('user-image', res.data.userImage);
         });
       };
 
       getData();
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
+      // setTimeout(() => {
+      //   // window.location.reload();
+      // }, 1000);
     }
 
     try {

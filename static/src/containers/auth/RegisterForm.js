@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { useRecoilState, useResetRecoilState } from 'recoil';
 import AuthForm from '../../components/auth/AuthForm';
 import { registerState } from '../../State/authState';
-// import { register } from '../../lib/api/auth';
 import client from '../../lib/api/client'; // 하드 코딩
 
 export default function RegisterForm() {

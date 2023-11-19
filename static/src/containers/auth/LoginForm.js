@@ -90,14 +90,11 @@ export default function LoginForm() {
               userImage: `${serverPath}${res.data.userImage}`,
             });
             setTheme({ userTheme: res.data.userTheme });
-            localStorage.setItem('theme', res.data.userTheme);
-            localStorage.setItem('user-image', res.data.userImage);
           });
         };
         getData();
 
         setUsers({ account: form.account });
-        localStorage.setItem('account', form.account);
 
         setTimeout(() => {
           navigate(`/${form.account}`);
