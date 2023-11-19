@@ -93,14 +93,28 @@ export default function EditorContainer() {
           ...write,
           createdAt: new Date(),
         });
-        writePost({
+        const promise = writePost({
           title: write.title,
           body: write.body,
           emoji: write.emoji,
           account: account,
         });
+        console.log(promise);
+
+        const getData = () => {
+          promise.then((res) => {
+            const id = String(res).split('/')[2].split('.')[0];
+            setWrite({
+              ...write,
+              id: id,
+            });
+          });
+        };
+        getData();
       }
-      return setPost({ error: false });
+      setTimeout(() => {
+        return setPost({ error: false });
+      }, 1000);
     } catch (e) {
       setPost({ error: true });
     }
@@ -118,9 +132,8 @@ export default function EditorContainer() {
       console.log(post.error);
     } else if (post.error === false) {
       console.log('성공');
-
       navigate(`/${account}/${write.id}`);
-      window.location.reload();
+      // window.location.reload();
       // reset();
     }
     setPost({ error: null });
