@@ -176,12 +176,13 @@ const EmojiBlock = styled(Link)`
 //   }
 // `;
 
-export default function MonthlyCalendar({ account, posts }) {
+export default function MonthlyCalendar({ account, posts, year }) {
   const addContent = ({ date }) => {
     const day = parseInt(moment(date).format('DD'));
+    const currentMonth = parseInt(moment(date).format('MM'));
     if (posts) {
       const emoji = posts.map((idx) => {
-        if (idx.day === day) {
+        if (idx.day === day && idx.month === currentMonth) {
           return (
             <EmojiBlock
               key={idx.id}
@@ -213,6 +214,7 @@ export default function MonthlyCalendar({ account, posts }) {
           prev2Label={null}
           next2Label={null}
           formatDay={(locale, date) => moment(date).format('D')}
+          onClickYear={(value, event) => year(String(value).slice(11, 15))}
         />
       </CalendarBlock>
     </MonthlyCalendarBlock>
