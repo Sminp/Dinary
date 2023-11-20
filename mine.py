@@ -22,4 +22,4 @@ def check():
         string = 'HI'
     return string
 
-app.run( '10.50.45.192' ,port = 10011, threaded=True,debug=True)
+app.run( '0.0.0.0' ,port = 10011, threaded=True,debug=True)
