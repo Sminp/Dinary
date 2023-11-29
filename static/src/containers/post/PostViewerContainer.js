@@ -57,7 +57,6 @@ export default function PostViewerContainer() {
 
   useEffect(() => {
     const promise = viewPost({ id: params.postId, account: account });
-    const serverPath = client.defaults.baseURL;
     console.log(promise);
     const getData = () => {
       promise.then((res) => {
@@ -67,11 +66,21 @@ export default function PostViewerContainer() {
           body: res.body,
           emoji: res.emoji,
           updatedAt: res.updatedAt,
-          backgroundImage: `${serverPath}/background/${params.postId}.jpg`,
+          theme: res.theme,
+          summed: res.summed,
         });
       });
     };
-    console.log(post.backgroundImage);
+    console.log(post.theme);
+    if (post.emoji === '') {
+      setPost({
+        ...post,
+        emoji: 'Happy',
+      });
+    }
+
+    console.log(post.emoji);
+
     getData();
     // 언마운트될 때 리덕스에서 포스트 데이터 없애기
     return () => {

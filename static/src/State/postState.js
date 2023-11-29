@@ -30,7 +30,12 @@ export const postState = atom({
     body: '',
     emoji: 'Happy',
     updatedAt: '',
-    backgroundImage: '',
+    url1: '',
+    url2: '',
+    url3: '',
+    url4: '',
+    theme: '',
+    summed: '',
   },
   effects_UNSTABLE: [persistAtom],
 });

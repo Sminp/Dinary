@@ -45,6 +45,7 @@ const WriteBlock = styled(Responsive)`
 export default function WriteForm({
   post,
   onChangeField,
+  onTheme,
   onPublish,
   tempEmoji,
 }) {
@@ -60,8 +61,10 @@ export default function WriteForm({
         </div>
         <ModalContainer
           onPublish={onPublish}
+          onTheme={onTheme}
           onChangeEmoji={onChangeField}
           tempEmoji={tempEmoji}
+          post={post}
         />
       </div>
       <Edit onChangeField={onChangeField} post={post} />

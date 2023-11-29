@@ -84,14 +84,14 @@ export default function PostViewer({ account, post, onEdit, onRemove }) {
   //   return null;
   // }
 
-  const { id, title, body, emoji, updatedAt, backgroundImage } = post;
+  const { id, title, body, emoji, updatedAt, theme } = post;
 
   const emojiIndex = emojiList.findIndex((item) => item.emojiId === emoji);
 
   return (
     <PostViewerBlock
       style={{
-        backgroundImage: `url(${backgroundImage})`,
+        backgroundImage: `url(${theme})`,
         backgroundRepeat: 'round',
         backgroundSize: '25% 25%',
       }}

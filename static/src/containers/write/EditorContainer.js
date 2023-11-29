@@ -6,6 +6,8 @@ import { postState, postErrorState } from '../../State/postState';
 import { userAccount } from '../../State/userState';
 import client from '../../lib/api/client';
 
+const emojiArr = ['Angry', 'Fear', 'Happy', 'Love', 'Sad', 'PokerFace'];
+
 export default function EditorContainer() {
   const account = useRecoilValue(userAccount);
   const [write, setWrite] = useRecoilState(postState);
@@ -13,12 +15,32 @@ export default function EditorContainer() {
 
   const navigate = useNavigate();
 
-  const writePost = async ({ title, body, emoji, account }) => {
+  const getTheme = async ({ account, body }) => {
+    try {
+      const res = await client.post('/diary/getTheme', { account, body });
+      if (res.status === 200) {
+        console.log('테마 가져오기 성공');
+        return res.data;
+      } else if (res.status === 400) {
+        console.log('데이터베이스 오류입니다.');
+        return res.data;
+      } else if (res.status === 404) {
+        console.log('없는 계정입니다.');
+        return res.data;
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const writePost = async ({ title, body, emoji, summed, theme, account }) => {
     try {
       const res = await client.post('/diary/new', {
         title,
         body,
         emoji,
+        summed,
+        theme,
         account,
       });
       if (res.status === 200) {
@@ -37,12 +59,22 @@ export default function EditorContainer() {
     }
   };
 
-  const updatePost = async ({ title, body, emoji, account, id }) => {
+  const updatePost = async ({
+    title,
+    body,
+    emoji,
+    summed,
+    theme,
+    account,
+    id,
+  }) => {
     try {
       const res = await client.post('/diary/rewrite', {
         title,
         body,
         emoji,
+        summed,
+        theme,
         account,
         id,
       });
@@ -70,11 +102,18 @@ export default function EditorContainer() {
       });
       return;
     }
-
-    setWrite({
-      ...write,
-      emoji: e.target.value,
-    });
+    console.log(e.target.value);
+    if (emojiArr.includes(e.target.value)) {
+      setWrite({
+        ...write,
+        emoji: e.target.value,
+      });
+    } else {
+      setWrite({
+        ...write,
+        theme: e.target.value,
+      });
+    }
   };
 
   // 포스트 등록
@@ -85,6 +124,8 @@ export default function EditorContainer() {
           title: write.title,
           body: write.body,
           emoji: write.emoji,
+          theme: write.theme,
+          summed: write.summed,
           account: account,
           id: write.id,
         });
@@ -93,28 +134,29 @@ export default function EditorContainer() {
           ...write,
           createdAt: new Date(),
         });
+        console.log(write.emoji);
         const promise = writePost({
           title: write.title,
           body: write.body,
           emoji: write.emoji,
+          theme: write.theme,
+          summed: write.summed,
           account: account,
         });
         console.log(promise);
 
         const getData = () => {
           promise.then((res) => {
-            const id = String(res).split('/')[2].split('.')[0];
+            console.log(res);
             setWrite({
               ...write,
-              id: id,
+              id: res.data.id,
             });
           });
         };
         getData();
       }
-      setTimeout(() => {
-        return setPost({ error: false });
-      }, 1000);
+      return setPost({ error: false });
     } catch (e) {
       setPost({ error: true });
     }
@@ -123,6 +165,32 @@ export default function EditorContainer() {
   // 취소
   const onCancel = () => {
     navigate(-1);
+  };
+
+  const onTheme = () => {
+    try {
+      const promise = getTheme({
+        account: account,
+        body: write.body,
+      });
+      // console.log(promise);
+
+      const getData = () => {
+        promise.then((res) => {
+          setWrite({
+            ...write,
+            url1: res.url1,
+            url2: res.url2,
+            url3: res.url3,
+            url4: res.url4,
+            summed: res.summed,
+          });
+        });
+      };
+      getData();
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   // 성공 혹은 실패 시 할 작업
@@ -144,6 +212,7 @@ export default function EditorContainer() {
       post={write}
       onChangeField={onChangeField}
       onPublish={onPublish}
+      onTheme={onTheme}
       onCancel={onCancel}
       tempEmoji={write.emoji}
     />

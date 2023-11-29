@@ -76,6 +76,7 @@ const AskModalBlock = styled.div`
 
   .theme {
     padding: 5px 0 0 0;
+    margin: auto;
 
     display: block;
 
@@ -99,6 +100,15 @@ const AskModalBlock = styled.div`
         border: 5px solid ${(props) => props.theme.text};
       }
     }
+
+    div {
+      width: 125px;
+      height: 125px;
+      margin: 7px 3px;
+      border: 5px solid ${(props) => props.theme.background};
+
+      display: inline-block;
+    }
   }
 `;
 
@@ -119,6 +129,8 @@ export function AskModal({
   onClick,
   theme,
 }) {
+  const loading = ['1', '2', '3', '4'];
+
   if (!visible) return null;
   return (
     <>
@@ -135,20 +147,36 @@ export function AskModal({
         <div className="content">
           <h4>오늘의 테마</h4>
           <div className="theme">
-            {theme.map((theme) => {
-              return (
-                <button
-                  key={theme}
-                  style={{
-                    backgroundImage: `url(${process.env.PUBLIC_URL}/images/User/Profile.svg)`,
-                    backgroundSize: 'cover',
-                    width: '125px',
-                    height: '125px',
-                  }}
-                  value={theme}
-                />
-              );
-            })}
+            {console.log(theme)}
+            {theme[0]
+              ? theme.map((theme) => {
+                  return (
+                    <button
+                      key={theme}
+                      onClick={onClick}
+                      style={{
+                        backgroundImage: `url(${theme})`,
+                        backgroundSize: 'cover',
+                        width: '125px',
+                        height: '125px',
+                      }}
+                      value={theme}
+                    />
+                  );
+                })
+              : loading.map((idx) => {
+                  return (
+                    <div
+                      key={idx}
+                      style={{
+                        backgroundImage: `url(${process.env.PUBLIC_URL}/images/Post/defaultTheme.svg)`,
+                        backgroundSize: 'cover',
+                        widht: '125px',
+                        height: '125px',
+                      }}
+                    />
+                  );
+                })}
           </div>
         </div>
         <div className="buttons">
@@ -161,9 +189,8 @@ export function AskModal({
   );
 }
 
-export default function ImageModal({ onPublish, onChange, tempEmoji }) {
+export default function ImageModal({ onPublish, onChange, tempEmoji, themes }) {
   const [open, setOpen] = useState(true);
-  const theme = ['Love']; // 임시
 
   const onConfirm = () => {
     setOpen(false);
@@ -182,7 +209,7 @@ export default function ImageModal({ onPublish, onChange, tempEmoji }) {
       onConfirm={onPublish}
       onCancel={onCancel}
       onClick={onChange}
-      theme={theme}
+      theme={themes}
     />
   );
 }
