@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import WriteForm from '../../components/write/WriteForm';
@@ -12,6 +12,7 @@ export default function EditorContainer() {
   const account = useRecoilValue(userAccount);
   const [write, setWrite] = useRecoilState(postState);
   const [post, setPost] = useRecoilState(postErrorState);
+  const [postId, setPostId] = useState('');
 
   const navigate = useNavigate();
 
@@ -150,7 +151,7 @@ export default function EditorContainer() {
             console.log(res);
             setWrite({
               ...write,
-              id: res.data.id,
+              id: res.id,
             });
           });
         };
@@ -200,7 +201,12 @@ export default function EditorContainer() {
       console.log(post.error);
     } else if (post.error === false) {
       console.log('성공');
-      navigate(`/${account}/${write.id}`);
+      console.log('1', write.id, '2', postId);
+      if (write.id) {
+        navigate(`/${account}/${write.id}`);
+      } else {
+        navigate(`/${account}/${postId}`);
+      }
       // window.location.reload();
       // reset();
     }
