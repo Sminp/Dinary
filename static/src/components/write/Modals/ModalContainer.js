@@ -12,9 +12,15 @@ export default function ModalContainer({
 }) {
   const [firstModal, setFirstModal] = useState(false);
 
-  const handleFirstModal = () => {
-    setFirstModal(!firstModal);
-    onTheme(); // 1. 이거 확인
+  const handleFirstModal = async () => {
+    if (firstModal) {
+      alert('테마가 생성되는 중입니다. 잠시만 기다려주세요');
+
+      setFirstModal(false);
+    } else if (firstModal === false) {
+      setFirstModal(!firstModal);
+      await onTheme(); // 1. 이거 확인
+    }
   };
 
   return (
