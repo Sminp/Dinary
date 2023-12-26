@@ -37,6 +37,7 @@ export default function PostViewerContainer() {
     }
   };
 
+  // rgb 수정
   const viewPost = async ({ id, account }) => {
     try {
       const res = await client.post(`/diary/load`, { id, account });

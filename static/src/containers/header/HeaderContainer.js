@@ -10,15 +10,18 @@ import {
 import Header from '../../components/common/header/Header';
 import { authCheckState } from '../../State/authState';
 import { postState } from '../../State/postState';
+import { useParams } from '../../../node_modules/react-router-dom/dist/index';
 
 export default function HeaderContainer() {
   const account = useRecoilValue(userAccount);
   const userProfile = useRecoilValue(userImage);
+  const post = useRecoilValue(postState);
   const resetUser = useResetRecoilState(userState);
   const resetProfile = useResetRecoilState(userImageState);
   const resetTheme = useResetRecoilState(userThemeState);
   const resetPost = useResetRecoilState(postState);
   const resetAuth = useResetRecoilState(authCheckState);
+  const params = useParams();
 
   const navigate = useNavigate();
 
@@ -41,12 +44,25 @@ export default function HeaderContainer() {
     resetPost();
   };
 
-  return (
-    <Header
-      account={account}
-      userImage={userProfile}
-      onLogout={handleLogout}
-      onUnload={handlePost}
-    />
-  );
+  if (params.postId) {
+    return (
+      <Header
+        account={account}
+        userImage={userProfile}
+        onLogout={handleLogout}
+        onUnload={handlePost}
+        post={post}
+      />
+    );
+  } else {
+    return (
+      <Header
+        account={account}
+        userImage={userProfile}
+        onLogout={handleLogout}
+        onUnload={handlePost}
+        post={null}
+      />
+    );
+  }
 }
