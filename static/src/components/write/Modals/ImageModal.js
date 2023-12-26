@@ -33,11 +33,6 @@ const AskModalBlock = styled.div`
 
   position: fixed;
 
-  h4 {
-    color: #666666;
-    margin: 5px 5px 0 5px;
-  }
-
   p {
     margin-bottom: 3rem;
   }
@@ -60,13 +55,42 @@ const AskModalBlock = styled.div`
   .content {
     width: 100%;
     height: 40%;
-    padding: 10px 20px;
+    padding: 9px 20px;
     background: ${(props) => props.theme.background};
     border-radius: 16px;
     box-shadow: 0px 4px 4px 0 rgba(0, 0, 0, 0.25);
 
     // width: 715px;
     // height: 292px;
+  }
+
+  .theme-header {
+    height: 30px;
+    margin: 0;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+
+    color: #666666;
+    // margin: 5px 5px 0 5px;
+  }
+
+  .loading {
+    height: 100%;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    font-weight: 500;
+
+    img {
+      width: 30px;
+      height: 30px;
+      margin: 0 10px 0 20px;
+    }
   }
 
   .emoji {
@@ -137,15 +161,33 @@ export function AskModal({
       <Fullscreen onClick={onCancel} />
       <AskModalBlock>
         <div className="header">
-          <h4>{title}</h4>
+          <div className="theme-header">
+            <h4>{title}</h4>
+          </div>
           <XButton onClick={onCancel} />
         </div>
         <div className="content emoji">
-          <h4>감정 구슬</h4>
+          <div className="theme-header">
+            <h4>감정 구슬</h4>
+          </div>
           <Emoji tempEmoji={tempEmoji} onClick={onClick} />
         </div>
         <div className="content">
-          <h4>오늘의 테마</h4>
+          <div className="theme-header">
+            <h4>오늘의 테마</h4>
+            {theme[0] ? (
+              ''
+            ) : (
+              <div className="loading">
+                <img
+                  src={`${process.env.PUBLIC_URL}/images/Write/Loading.gif`}
+                  alt="loading"
+                />{' '}
+                테마를 생성하는 중입니다...
+              </div>
+            )}
+          </div>
+
           <div className="theme">
             {console.log(theme)}
             {theme[0]
