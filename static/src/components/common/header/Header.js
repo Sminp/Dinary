@@ -49,7 +49,13 @@ const LogoButton = styled(Button)`
   }
 `;
 
-export default function Header({ account, userImage, onLogout, onUnload }) {
+export default function Header({
+  account,
+  userImage,
+  onLogout,
+  onUnload,
+  post,
+}) {
   const [scroll, setScroll] = useState(false);
 
   // 좀 더 효율적인 방법 없을까??? 수정
@@ -68,14 +74,35 @@ export default function Header({ account, userImage, onLogout, onUnload }) {
     }
   };
 
-  return (
-    <Wrapper $scroll={scroll}>
-      <HeaderBlock>
-        <LogoButton to={`/${account}`} onClick={onUnload}>
-          <div />
-        </LogoButton>
-        <UserInfo account={account} userImage={userImage} onLogout={onLogout} />
-      </HeaderBlock>
-    </Wrapper>
-  );
+  if (post !== null) {
+    return (
+      <Wrapper $scroll={scroll} style={{ background: { post } }}>
+        <HeaderBlock>
+          <LogoButton to={`/${account}`} onClick={onUnload}>
+            <div />
+          </LogoButton>
+          <UserInfo
+            account={account}
+            userImage={userImage}
+            onLogout={onLogout}
+          />
+        </HeaderBlock>
+      </Wrapper>
+    );
+  } else {
+    return (
+      <Wrapper $scroll={scroll}>
+        <HeaderBlock>
+          <LogoButton to={`/${account}`} onClick={onUnload}>
+            <div />
+          </LogoButton>
+          <UserInfo
+            account={account}
+            userImage={userImage}
+            onLogout={onLogout}
+          />
+        </HeaderBlock>
+      </Wrapper>
+    );
+  }
 }
