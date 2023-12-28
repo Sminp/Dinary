@@ -153,7 +153,7 @@ export function AskModal({
   onClick,
   theme,
 }) {
-  const loading = ['1', '2', '3', '4'];
+  const loading = ['1', '2', '3'];
 
   if (!visible) return null;
   return (
@@ -191,10 +191,11 @@ export function AskModal({
           <div className="theme">
             {console.log(theme)}
             {theme[0]
-              ? theme.map((theme) => {
+              ? theme.map((theme, idx) => {
                   return (
                     <button
-                      key={theme}
+                      key={idx}
+                      data-key={idx}
                       onClick={onClick}
                       style={{
                         backgroundImage: `url(${theme})`,

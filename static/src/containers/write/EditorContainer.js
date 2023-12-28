@@ -6,7 +6,7 @@ import { postState, postErrorState } from '../../State/postState';
 import { userAccount } from '../../State/userState';
 import client from '../../lib/api/client';
 
-const emojiArr = ['Angry', 'Fear', 'Happy', 'Love', 'Sad', 'PokerFace'];
+const emojiArr = ['anger', 'fear', 'happiness', 'disgust', 'sad', 'neutral'];
 
 export default function EditorContainer() {
   const account = useRecoilValue(userAccount);
@@ -34,15 +34,16 @@ export default function EditorContainer() {
     }
   };
 
-  const writePost = async ({ title, body, emoji, summed, theme, account }) => {
+  const writePost = async ({ title, body, sentiment, summed, theme, account, r, g, b }) => {
     try {
       const res = await client.post('/diary/new', {
         title,
         body,
-        emoji,
+        sentiment,
         summed,
         theme,
         account,
+        r, g, b,
       });
       if (res.status === 200) {
         console.log('글 작성 성공');
@@ -63,21 +64,25 @@ export default function EditorContainer() {
   const updatePost = async ({
     title,
     body,
-    emoji,
+    sentiment,
     summed,
     theme,
     account,
     id,
+    r, g, b,
   }) => {
     try {
       const res = await client.post('/diary/rewrite', {
         title,
         body,
-        emoji,
+        sentiment,
         summed,
         theme,
         account,
         id,
+        r,
+        g,
+        b,
       });
       if (res.status === 200) {
         console.log('글 수정 성공!');
@@ -107,12 +112,20 @@ export default function EditorContainer() {
     if (emojiArr.includes(e.target.value)) {
       setWrite({
         ...write,
-        emoji: e.target.value,
+        sentiment: e.target.value,
       });
     } else {
+      const bList = write.b.split('/');
+      const gList = write.g.split('/');
+      const rList = write.r.split('/');
+      const eKey = e.target.dataset.key;
+      console.log(eKey)
       setWrite({
         ...write,
         theme: e.target.value,
+        b: bList[eKey],
+        g: gList[eKey],
+        r: rList[eKey],
       });
     }
   };
@@ -124,25 +137,30 @@ export default function EditorContainer() {
         updatePost({
           title: write.title,
           body: write.body,
-          emoji: write.emoji,
+          sentiment: write.sentiment,
           theme: write.theme,
           summed: write.summed,
           account: account,
           id: write.id,
+          r: write.r,
+          g: write.g,
+          b: write.b,
         });
       } else {
         setWrite({
           ...write,
           createdAt: new Date(),
         });
-        console.log(write.emoji);
         const promise = writePost({
           title: write.title,
           body: write.body,
-          emoji: write.emoji,
+          sentiment: write.sentiment,
           theme: write.theme,
           summed: write.summed,
           account: account,
+          r: write.r,
+          g: write.g,
+          b: write.b,
         });
         console.log(promise);
 
@@ -174,16 +192,20 @@ export default function EditorContainer() {
         account: account,
         body: write.body,
       });
-      // console.log(promise);
+      console.log('테마 생성 중입니다',promise);
 
       const getData = () => {
         promise.then((res) => {
+          console.log('data', res)
           setWrite({
             ...write,
+            b:res.b,
+            g:res.g,
+            r:res.r,
+            sentiment: res.sentiment,
             url1: res.url1,
             url2: res.url2,
             url3: res.url3,
-            url4: res.url4,
             summed: res.summed,
           });
         });
@@ -220,7 +242,7 @@ export default function EditorContainer() {
       onPublish={onPublish}
       onTheme={onTheme}
       onCancel={onCancel}
-      tempEmoji={write.emoji}
+      tempEmoji={write.sentiment}
     />
   );
 }

@@ -31,7 +31,7 @@ export default function ModalContainer({
       </Button>
       {firstModal && (
         <ImageModal
-          themes={[post.url1, post.url2, post.url3, post.url4]}
+          themes={[post.url1, post.url2, post.url3]}
           onPublish={onPublish}
           onChange={onChangeEmoji}
           tempEmoji={tempEmoji}
