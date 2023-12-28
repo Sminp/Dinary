@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Modal from '../../common/Modal';
-import Emoji from '../../common/Emoji';
+import Emoji from './Emoji';
 
 const Content = styled.div`
   width: 444px;
@@ -24,7 +24,7 @@ const Content = styled.div`
 `;
 
 export default function EmojiExplainModal({ close }) {
-  const [checkedEmoji, setCheckedEmoji] = useState('Happy');
+  const [checkedEmoji, setCheckedEmoji] = useState('happiness');
 
   const handleCheckedEmoji = (e) => {
     setCheckedEmoji(e.target.value);

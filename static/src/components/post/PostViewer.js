@@ -84,24 +84,22 @@ export default function PostViewer({ account, post, onEdit, onRemove }) {
   //   return null;
   // }
 
-  const { id, title, body, emoji, updatedAt, theme } = post;
-
-  const emojiIndex = emojiList.findIndex((item) => item.emojiId === emoji);
+  const emojiIndex = emojiList.findIndex((item) => item.emojiId === post.sentiment);
 
   return (
     <PostViewerBlock
       style={{
-        backgroundImage: `url(${theme})`,
+        backgroundImage: `url(${post.theme})`,
         backgroundRepeat: 'round',
         backgroundSize: '25% 25%',
       }}
     >
-      <PostHead>
+      <PostHead style={{backgroundColor: `rgba(${post.r}, ${post.g}, ${post.b}, 1.0)`}}>
         <div>
-          <div className="category">{`${updatedAt.slice(
+          <div className="category">{`${post.updatedAt.slice(
             0,
             4,
-          )}년 ${updatedAt.slice(5, 7)}월 ${updatedAt.slice(8, 10)}일`}</div>
+          )}년 ${post.updatedAt.slice(5, 7)}월 ${post.updatedAt.slice(8, 10)}일`}</div>
           <div className="subtitles">
             {account}님의 마음구슬은 <span>{emojiList[emojiIndex].name}</span>
             이에요.
@@ -112,9 +110,9 @@ export default function PostViewer({ account, post, onEdit, onRemove }) {
       <Contents>
         <div className="title" style={{ borderBottom: `2px solid #353535` }}>
           {/* 임시 컬러 */}
-          <span>{title}</span>
+          <span>{post.title}</span>
         </div>
-        <PostContent>{body}</PostContent>
+        <PostContent>{post.body}</PostContent>
       </Contents>
       <ToTop />
     </PostViewerBlock>

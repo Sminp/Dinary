@@ -188,7 +188,7 @@ export default function MonthlyCalendar({ account, posts, year }) {
               key={idx.id}
               to={`/${account}/${idx.id}`}
               style={{
-                backgroundImage: `url(${process.env.PUBLIC_URL}/images/Emoji/${idx.emoji}.svg)`,
+                backgroundImage: `url(${process.env.PUBLIC_URL}/images/Emoji/${idx.sentiment}.svg)`,
                 backgroundSize: 'cover',
               }}
             />
