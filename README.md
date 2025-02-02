@@ -1,3 +1,13 @@
+# 시연영상 #
+
+
+https://github.com/user-attachments/assets/67515dbf-5b2b-497b-90f7-337d6fba20f6
+
+
+영상중 테마를 만들고 선택하는 부분은 시간이 좀 걸립니다. 30초 내외로 걸릴 수 있으니 뛰어 넘어 보셔도 됩니다!
+
+원본은 Github private로 저장되어 있어 프론트엔드 파일만 가져왔습니다. 아래는 private 파일에서 가져온 README입니다.
+
 # #--AWS EC2 내에서 BUILD하고 배포할 수 있으므로 diary내 실행파일 삭제X, 자바버전 17 --#
 ~     : 회원가입 및 로그인 작업
 11.11
